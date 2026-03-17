@@ -347,13 +347,13 @@
 
             <div class="section-content bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden">
                 <div class="table-container">
-                    <table id="master-table" class="w-full text-left border-collapse min-w-[1250px]">
+                    <table id="master-table" class="w-full text-left border-collapse min-w-[1100px]">
                         <thead class="bg-slate-900 text-white uppercase text-[10px] font-bold text-nowrap">
                             <tr>
                                 <th class="p-3 sticky-col bg-slate-950 border-r border-slate-700 z-20">ช่วงเวลา</th>
-                                <th class="p-2 text-center border-r border-slate-700 bg-blue-700" colspan="5">จูน (June)</th>
-                                <th class="p-2 text-center border-r border-slate-700 bg-orange-600" colspan="5">เบิร์ด (Bird)</th>
-                                <th class="p-2 text-center border-r border-slate-700 bg-slate-700 col-tang-details" colspan="4">ตัง (ไม่คิด KPI)</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-blue-700" colspan="4">จูน (June)</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-orange-600" colspan="4">เบิร์ด (Bird)</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-slate-700 col-tang-details" colspan="3">ตัง (ไม่คิด KPI)</th>
                                 <th class="p-2 text-center bg-indigo-950">ทีมรวม</th>
                             </tr>
                             <tr class="bg-slate-800 text-[9px]">
@@ -363,18 +363,15 @@
                                 <th class="p-1.5 text-center border-r border-slate-600 text-green-400 col-kpi">เขียว%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 text-orange-400 col-kpi">ส้ม%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 col-kpi font-black text-blue-200">สัดส่วน%</th>
-                                <th class="p-1.5 text-center border-r border-slate-600 col-team-share text-blue-300">กอง%</th>
                                 <!-- Bird -->
                                 <th class="p-1.5 text-center border-r border-slate-600 col-posts">โพสต์</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 text-green-400 col-kpi">เขียว%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 text-orange-400 col-kpi">ส้ม%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 col-kpi font-black text-orange-200">สัดส่วน%</th>
-                                <th class="p-1.5 text-center border-r border-slate-600 col-team-share text-orange-300">กอง%</th>
                                 <!-- Tang -->
                                 <th class="p-1.5 text-center border-r border-slate-600 col-tang-details">โพสต์</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 col-tang-details text-green-400 font-bold">เขียว%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 col-tang-details text-orange-400 font-bold">ส้ม%</th>
-                                <th class="p-1.5 text-center border-r border-slate-600 col-tang-details text-slate-300 font-bold">กอง%</th>
                                 <!-- Total -->
                                 <th class="p-1.5 text-center text-slate-300 bg-indigo-950">ปริมาณรวม</th>
                             </tr>
@@ -475,7 +472,6 @@
         const handleInput = (e) => {
             if(currentMonth === 'all') return;
             const [u, f] = e.target.id.split('-');
-            // ป้องกันค่าติดลบ
             let val = parseInt(e.target.value);
             if (val < 0) val = 0;
             
@@ -497,7 +493,6 @@
 
         const calculateAll = () => {
             const getScore = (p, t) => t==='g' ? (p<15?1:p<20?2:p<25?3:p<30?4:5) : (p<70?1:p<80?2:p<85?3:p<90?4:5);
-            // Workload Score Rule: >=49% = 3(Max), 45-48.9% = 2, <45% = 1
             const getWScore = (p) => p === 0 ? 0 : (p >= 49 ? 3 : (p >= 45 ? 2 : 1));
 
             const procUser = (u, ou) => {
@@ -588,7 +583,6 @@
             const teamSum = jt + bt + tt;
             const jMT = jt + bt;
             
-            // Dynamic classes for styling
             const sCol = isS ? (ex.includes('bg-slate-900') ? 'bg-slate-900 text-white z-20' : 'bg-summary z-20') : 'z-20';
             const jBg = isS ? '' : 'bg-blue-50/10';
             const bBg = isS ? '' : 'bg-orange-50/10';
@@ -600,18 +594,15 @@
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${jBg}">${pct(jg,jt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${jBg}">${pct(jg+jo,jt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-blue-600 ${jBg}">${pct(jt,jMT)}</td>
-                <td class="p-1.5 text-center border-r border-slate-200 col-team-share text-blue-400 italic ${jBg}">${pct(jt,teamSum)}</td>
                 <!-- Bird -->
                 <td class="p-1.5 text-center border-r border-slate-100 col-posts ${bBg}">${bt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${bBg}">${pct(bg,bt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${bBg}">${pct(bg+bo,bt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-orange-600 ${bBg}">${pct(bt,jMT)}</td>
-                <td class="p-1.5 text-center border-r border-slate-200 col-team-share text-orange-400 italic ${bBg}">${pct(bt,teamSum)}</td>
                 <!-- Tang -->
                 <td class="p-1.5 text-center border-r border-slate-100 font-bold text-slate-500 col-tang-details">${tt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 text-green-600 font-medium col-tang-details">${pct(tg,tt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 text-orange-500 font-medium col-tang-details">${pct(tg+to,tt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-200 text-indigo-500 font-bold col-tang-details">${pct(tt,teamSum)}</td>
                 <!-- Team Total -->
                 <td class="p-1.5 text-center font-black ${isS ? '' : 'text-slate-800 bg-indigo-50/20'}">${teamSum}</td>
             `;
