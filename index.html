@@ -347,7 +347,7 @@
 
             <div class="section-content bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden">
                 <div class="table-container">
-                    <table id="master-table" class="w-full text-left border-collapse min-w-[1100px]">
+                    <table id="master-table" class="w-full text-left border-collapse min-w-[1250px]">
                         <thead class="bg-slate-900 text-white uppercase text-[10px] font-bold text-nowrap">
                             <tr>
                                 <th class="p-3 sticky-col bg-slate-950 border-r border-slate-700 z-20">ช่วงเวลา</th>
@@ -421,12 +421,11 @@
 
         const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         const shortMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+        
+        const APP_ID = 'kpi-web-2026-production'; // ล็อกชื่อกล่องข้อมูลถาวร เพื่อให้มือถือกับคอมซิงค์ตรงกันเสมอ
+
+        // 1. สร้างโครงสร้างข้อมูลเริ่มต้น
         let appData = [];
-        let currentMonth = 'all';
-        let db, auth, isCloudActive = false, collapsedQs = [];
-
-        const APP_ID = 'kpi-web-2026-v12-master';
-
         for(let i=0; i<12; i++) {
             appData[i] = {
                 june: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
@@ -434,6 +433,22 @@
                 tang: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' }
             };
         }
+
+        // 2. ดึงข้อมูลจาก Local Storage (ป้องกันข้อมูลหายตอนโหลดหน้าใหม่)
+        const localData = localStorage.getItem('kpiTeamData2026');
+        if (localData) {
+            try {
+                const parsed = JSON.parse(localData);
+                if (Array.isArray(parsed) && parsed.length >= 12) {
+                    appData = parsed;
+                }
+            } catch (e) {
+                console.error("Local Storage parse error", e);
+            }
+        }
+
+        let currentMonth = 'all';
+        let db, auth, isCloudActive = false, isCloudLoaded = false, collapsedQs = [];
 
         window.toggleSection = (id) => document.getElementById(id).classList.toggle('collapsed');
         window.toggleTableCol = (c, s) => document.querySelectorAll('.'+c).forEach(el => el.style.display = s ? '' : 'none');
@@ -480,15 +495,30 @@
             
             calculateAll();
             localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
-            clearTimeout(window.saveTimer);
-            window.saveTimer = setTimeout(saveToCloud, 1000);
+            
+            // รอให้ Firebase โหลดเสร็จก่อนค่อยเซฟ ป้องกันเอาค่าว่างไปทับของเดิม
+            if (isCloudActive && isCloudLoaded) {
+                const s = document.getElementById('sync-status');
+                s.innerHTML = '<i class="fas fa-sync-alt fa-spin text-blue-500"></i> กำลังบันทึก...';
+                s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 text-blue-600 border border-blue-200 shadow-sm';
+                clearTimeout(window.saveTimer);
+                window.saveTimer = setTimeout(saveToCloud, 1000);
+            }
         };
 
         const saveToCloud = async () => {
-            if(!isCloudActive || !db) return;
+            if(!isCloudActive || !db || !isCloudLoaded) return;
             try {
-                await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master'), { data: appData, updated: new Date() }, { merge: true });
-            } catch(e) {}
+                await setDoc(doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master'), { data: appData, updated: new Date() }, { merge: false });
+                const s = document.getElementById('sync-status');
+                s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> บันทึกออนไลน์เรียบร้อย';
+                s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
+            } catch(e) {
+                console.error("Save to Cloud error:", e);
+                const s = document.getElementById('sync-status');
+                s.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500"></i> บันทึกไม่สำเร็จ (ติดสิทธิ์ Firebase)';
+                s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 shadow-sm';
+            }
         };
 
         const calculateAll = () => {
@@ -645,10 +675,10 @@
                 onAuthStateChanged(auth, (user) => {
                     if(user) {
                         isCloudActive = true;
-                        const s = document.getElementById('sync-status');
-                        s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> ซิงค์ออนไลน์เรียบร้อย';
-                        s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
-                        onSnapshot(doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master'), (snap) => {
+                        
+                        const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master');
+                        onSnapshot(docRef, (snap) => {
+                            isCloudLoaded = true;
                             if(snap.exists()) {
                                 const cloud = snap.data().data;
                                 if(JSON.stringify(cloud) !== JSON.stringify(appData)) {
@@ -656,22 +686,42 @@
                                     localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
                                     changeMonth(currentMonth);
                                 }
+                            } else {
+                                // ถ้าไม่มีข้อมูลบน Cloud แต่มีในเครื่อง ให้ดันขึ้นไป
+                                if (localData) saveToCloud();
                             }
+                            
+                            const s = document.getElementById('sync-status');
+                            s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> ซิงค์ออนไลน์เรียบร้อย';
+                            s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
+                        }, (err) => {
+                            console.error("Firestore error:", err);
+                            const s = document.getElementById('sync-status');
+                            s.innerHTML = '<i class="fas fa-lock text-red-500"></i> ติดสิทธิ์ Firebase Rules';
+                            s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 shadow-sm';
                         });
                     }
                 });
-            } catch(e) { document.getElementById('sync-status').innerText = 'Offline Mode'; }
+            } catch(e) { 
+                document.getElementById('sync-status').innerText = 'Offline Mode'; 
+            }
             document.querySelectorAll('.data-input').forEach(i => i.addEventListener('input', handleInput));
             changeMonth('all');
         };
 
         window.exportExcel = () => {
-            const r = [["KPI Team 2026 Master Report"], ["เดือน", "จูน รวม", "จูน เขียว%", "จูน ส้ม%", "เบิร์ด รวม", "เบิร์ด เขียว%", "เบิร์ด ส้ม%", "ตัง รวม", "รวมทีม"]];
+            const r = [["KPI Team 2026 Master Report"], ["เดือน", "จูน รวม", "จูน เขียว%", "จูน ส้ม%", "เบิร์ด รวม", "เบิร์ด เขียว%", "เบิร์ด ส้ม%", "ตัง รวม", "ตัง เขียว%", "ตัง ส้ม%", "รวมทีม"]];
             appData.forEach((d, i) => {
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
+                const jg = (parseInt(d.june.green)||0)+(parseInt(d.june.life_green)||0);
+                const jo = (parseInt(d.june.orange)||0)+(parseInt(d.june.life_orange)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
+                const bg = (parseInt(d.bird.green)||0)+(parseInt(d.bird.life_green)||0);
+                const bo = (parseInt(d.bird.orange)||0)+(parseInt(d.bird.life_orange)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
-                r.push([ monthNames[i], jt, (d.june.green/jt*100||0).toFixed(1), (d.june.orange/jt*100||0).toFixed(1), bt, (d.bird.green/bt*100||0).toFixed(1), (d.bird.orange/bt*100||0).toFixed(1), tt, jt+bt+tt ]);
+                const tg = (parseInt(d.tang.green)||0)+(parseInt(d.tang.life_green)||0);
+                const to = (parseInt(d.tang.orange)||0)+(parseInt(d.tang.life_orange)||0);
+                r.push([ monthNames[i], jt, (jg/jt*100||0).toFixed(1), ((jg+jo)/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), ((bg+bo)/bt*100||0).toFixed(1), tt, (tg/tt*100||0).toFixed(1), ((tg+to)/tt*100||0).toFixed(1), jt+bt+tt ]);
             });
             XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(r), "KPI"), "KPI_Report_2026.xlsx");
         };
@@ -701,6 +751,7 @@
                     if(imp && imp.length >= 12) {
                         appData = imp; localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
                         changeMonth(currentMonth); alert("✅ โหลดข้อมูลสำเร็จ");
+                        saveToCloud(); // ดันขึ้นคลาวด์ให้ด้วยถ้าเชื่อมต่ออยู่
                     } else alert("❌ ไฟล์ไม่ถูกต้อง");
                 } catch(err) { alert("❌ อ่านไฟล์ไม่ได้"); }
                 e.target.value = '';
