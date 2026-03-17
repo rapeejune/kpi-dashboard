@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- โหลดฟอนต์ภาษาไทย -->
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- โหลด Chart.js สำหรับสร้างกราฟ -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
             font-family: 'Prompt', sans-serif;
@@ -69,6 +72,10 @@
             .mb-8 { margin-bottom: 15px !important; }
             .text-sm { font-size: 11px !important; }
             .text-xs { font-size: 9px !important; }
+            /* จัดการกราฟตอนปริ้นท์ */
+            .chart-container {
+                min-height: 250px !important;
+            }
         }
     </style>
 </head>
@@ -354,11 +361,33 @@
             </div>
         </div>
 
+        <!-- กราฟแนวโน้มตลอดปี (เพิ่มใหม่) -->
+        <h2 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-2 mt-8 pt-4 page-break-inside-avoid">
+            <i class="fas fa-chart-line text-blue-600"></i> กราฟแนวโน้มผลงานตลอดปี 2026
+        </h2>
+        <div class="grid md:grid-cols-2 gap-6 mb-8 page-break-inside-avoid">
+            <!-- กราฟที่ 1: ปริมาณงานโพสต์รวม -->
+            <div class="bg-white rounded-xl shadow-md p-5 border border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-2 text-center text-sm md:text-base">ปริมาณงานโพสต์รายเดือน (Main + Life)</h3>
+                <div class="relative w-full h-[280px] chart-container">
+                    <canvas id="volumeChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- กราฟที่ 2: สัดส่วนภาระงาน (Workload) -->
+            <div class="bg-white rounded-xl shadow-md p-5 border border-slate-200">
+                <h3 class="font-bold text-slate-700 mb-2 text-center text-sm md:text-base">สัดส่วนภาระงาน % (Workload) เทียบเป้า 50%</h3>
+                <div class="relative w-full h-[280px] chart-container">
+                    <canvas id="workloadChart"></canvas>
+                </div>
+            </div>
+        </div>
+
         <!-- ตารางสรุปผลตลอดปี (รายเดือน/Q/ทั้งปี) -->
-        <h2 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-2 mt-12 pt-4">
+        <h2 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-2 mt-12 pt-4 page-break-inside-avoid">
             <i class="fas fa-table text-blue-600"></i> ตารางสรุปผลตลอดปี 2026 (รายเดือน / ไตรมาส / ทั้งปี)
         </h2>
-        <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-8">
+        <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-8 page-break-inside-avoid">
             <div class="overflow-x-auto">
                 <table class="w-full text-sm text-left whitespace-nowrap">
                     <thead class="text-xs text-slate-700 uppercase bg-slate-100 border-b border-slate-200">
@@ -391,7 +420,16 @@
     <!-- ส่วนของการคำนวณและจัดการข้อมูล (JavaScript) -->
     <script>
         const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        const shortMonthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
         let currentMonth = 0; // 0 = มกราคม
+        
+        // ตัวแปรเก็บ Instance ของกราฟ
+        let volumeChartInstance = null;
+        let workloadChartInstance = null;
+
+        // ตั้งค่าฟอนต์เริ่มต้นให้ Chart.js ตรงกับเว็บ
+        Chart.defaults.font.family = "'Prompt', sans-serif";
+        Chart.defaults.color = '#64748b';
         
         // โครงสร้างข้อมูลสำหรับ 12 เดือน (รองรับ Main + Life)
         let appData = {};
@@ -554,16 +592,15 @@
             updateUserCard('june', jTotal, jGreen, jOrange, mainTotal);
             updateUserCard('bird', bTotal, bGreen, bOrange, mainTotal);
 
-            // อัปเดตตารางสรุปทั้งปี
+            // อัปเดตตารางและกราฟทั้งปี
             updateSummaryTable();
+            updateCharts();
         }
 
         // ฟังก์ชันสร้างตารางสรุป (รายเดือน / ไตรมาส / ปี)
         function updateSummaryTable() {
             const tbody = document.getElementById('summary-table-body');
             tbody.innerHTML = '';
-
-            const shortMonthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
             
             let yearTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
             let qTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
@@ -654,6 +691,115 @@
                 <td class="py-3 px-4 text-center border-l border-slate-300 font-bold">${teamTotal || '-'}</td>
             `;
             return tr;
+        }
+
+        // --- ระบบสร้างกราฟ (Chart.js) ---
+        function updateCharts() {
+            const dataJuneVol = [];
+            const dataBirdVol = [];
+            const dataTangVol = [];
+            
+            const dataJuneWorkload = [];
+            const dataBirdWorkload = [];
+            const goalWorkload = Array(12).fill(50); // เส้นเป้าหมาย 50% ตลอดปี
+
+            for (let i = 0; i < 12; i++) {
+                const data = appData[i];
+                
+                // คำนวณ Volume (ยอดรวม)
+                const jt = (parseInt(data.june.total) || 0) + (parseInt(data.june.life_total) || 0);
+                const bt = (parseInt(data.bird.total) || 0) + (parseInt(data.bird.life_total) || 0);
+                const tt = (parseInt(data.tang.total) || 0) + (parseInt(data.tang.life_total) || 0);
+                
+                dataJuneVol.push(jt);
+                dataBirdVol.push(bt);
+                dataTangVol.push(tt);
+
+                // คำนวณ Workload %
+                const mainTotal = jt + bt;
+                const jWorkPct = mainTotal > 0 ? (jt / mainTotal * 100).toFixed(1) : 0;
+                const bWorkPct = mainTotal > 0 ? (bt / mainTotal * 100).toFixed(1) : 0;
+                
+                dataJuneWorkload.push(jWorkPct);
+                dataBirdWorkload.push(bWorkPct);
+            }
+
+            // กราฟที่ 1: Volume Chart (Stacked Bar)
+            const ctxVol = document.getElementById('volumeChart').getContext('2d');
+            if (volumeChartInstance) volumeChartInstance.destroy(); // ลบของเก่าก่อนวาดใหม่
+            
+            volumeChartInstance = new Chart(ctxVol, {
+                type: 'bar',
+                data: {
+                    labels: shortMonthNames,
+                    datasets: [
+                        { label: 'จูน', data: dataJuneVol, backgroundColor: '#3b82f6', borderRadius: 4 },
+                        { label: 'เบิร์ด', data: dataBirdVol, backgroundColor: '#6366f1', borderRadius: 4 },
+                        { label: 'ตัง', data: dataTangVol, backgroundColor: '#cbd5e1', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: { stacked: true, grid: { display: false } },
+                        y: { stacked: true, beginAtZero: true }
+                    },
+                    plugins: {
+                        tooltip: { mode: 'index', intersect: false }
+                    }
+                }
+            });
+
+            // กราฟที่ 2: Workload Chart (Line)
+            const ctxWorkload = document.getElementById('workloadChart').getContext('2d');
+            if (workloadChartInstance) workloadChartInstance.destroy();
+            
+            workloadChartInstance = new Chart(ctxWorkload, {
+                type: 'line',
+                data: {
+                    labels: shortMonthNames,
+                    datasets: [
+                        { 
+                            label: 'เป้าหมาย 50%', 
+                            data: goalWorkload, 
+                            borderColor: '#22c55e', 
+                            borderDash: [5, 5], 
+                            borderWidth: 2, 
+                            pointRadius: 0,
+                            fill: false
+                        },
+                        { 
+                            label: 'จูน (%)', 
+                            data: dataJuneWorkload, 
+                            borderColor: '#3b82f6', 
+                            backgroundColor: '#3b82f6',
+                            tension: 0.3,
+                            borderWidth: 3,
+                            pointRadius: 4
+                        },
+                        { 
+                            label: 'เบิร์ด (%)', 
+                            data: dataBirdWorkload, 
+                            borderColor: '#6366f1', 
+                            backgroundColor: '#6366f1',
+                            tension: 0.3,
+                            borderWidth: 3,
+                            pointRadius: 4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: { beginAtZero: true, max: 100, ticks: { callback: function(value) { return value + '%'; } } }
+                    },
+                    plugins: {
+                        tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': ' + context.parsed.y + '%'; } } }
+                    }
+                }
+            });
         }
 
         // --- ระบบบันทึกและโหลดไฟล์ (Export / Import) ---
