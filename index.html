@@ -28,8 +28,8 @@
         /* ตั้งค่าสำหรับตอนกด Print / Save as PDF */
         @media print {
             @page {
-                size: landscape; /* บังคับเป็นแนวนอนอัตโนมัติ */
-                margin: 10mm; /* ตั้งระยะขอบกระดาษให้พอดี */
+                size: landscape;
+                margin: 10mm;
             }
             .no-print { 
                 display: none !important; 
@@ -37,14 +37,12 @@
             body { 
                 background-color: white !important; 
                 padding: 0 !important;
-                font-size: 12px !important; /* ลดขนาดฟอนต์ภาพรวม */
+                font-size: 12px !important;
             }
-            /* บังคับให้สีพื้นหลัง (Background color) ติดไปใน PDF ด้วย */
             * { 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
             }
-            /* ให้พอดีหน้ากระดาษ */
             .max-w-6xl {
                 max-width: 100% !important;
                 width: 100% !important;
@@ -123,7 +121,7 @@
             </div>
         </header>
 
-        <!-- ส่วนกรอกข้อมูลและตารางต่างๆ (เหมือนเดิม) -->
+        <!-- ส่วนกรอกข้อมูลและตารางต่างๆ -->
         <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between bg-white p-4 rounded-xl shadow-sm border border-slate-200 sticky top-4 z-10 no-print">
             <div class="flex items-center gap-3 mb-3 sm:mb-0">
                 <div class="bg-blue-100 p-2 rounded-lg text-blue-600">
@@ -195,13 +193,13 @@
                 <h3 class="font-semibold text-slate-600 text-sm mb-2 mt-1 flex items-center gap-1"><i class="fas fa-newspaper"></i> หมวดหลัก (Main)</h3>
                 <div class="grid grid-cols-3 gap-2 mb-3">
                     <div><label class="block text-xs font-medium text-slate-500 mb-1">ยอดรวม</label><input type="number" id="tang-total" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
-                    <div><label class="block text-xs font-medium text-green-700 mb-1">เขียว</label><input type="number" id="tang-green" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
-                    <div><label class="block text-xs font-medium text-orange-700 mb-1">ส้ม</label><input type="number" id="tang-orange" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
+                    <div><label class="block text-xs font-medium text-slate-500 mb-1">เขียว</label><input type="number" id="tang-green" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
+                    <div><label class="block text-xs font-medium text-slate-500 mb-1">ส้ม</label><input type="number" id="tang-orange" class="data-input w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
                 </div>
                 <h3 class="font-semibold text-slate-600 text-sm mb-2 mt-3 pt-3 border-t flex items-center gap-1"><i class="fas fa-heart"></i> หมวด Life</h3>
                 <div class="grid grid-cols-3 gap-2">
                     <div><label class="block text-xs font-medium text-slate-500 mb-1">ยอดรวม</label><input type="number" id="tang-life_total" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
-                    <div><label class="block text-xs font-medium text-green-700 mb-1">เขียว</label><input type="number" id="tang-life_green" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
+                    <div><label class="block text-xs font-medium text-slate-500 mb-1">เขียว</label><input type="number" id="tang-life_green" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
                     <div><label class="block text-xs font-medium text-orange-700 mb-1">ส้ม</label><input type="number" id="tang-life_orange" class="data-input w-full px-2 py-1.5 border border-slate-200 rounded focus:ring-1 focus:ring-slate-400 outline-none text-sm" placeholder="0"></div>
                 </div>
             </div>
@@ -213,7 +211,7 @@
         </h2>
         
         <div class="grid md:grid-cols-2 gap-6 mb-8">
-            <!-- Result Cards June & Bird (สรุปรวมยอด Main + Life) -->
+            <!-- Result Cards June & Bird -->
             <div id="june-card" class="bg-white rounded-xl shadow-md p-5 border-t-4 border-blue-500">
                 <h3 class="text-xl font-bold mb-4 flex items-center gap-2"><i class="fas fa-user-circle text-slate-600 text-2xl"></i> KPI จูน</h3>
                 <div class="space-y-4">
@@ -305,7 +303,8 @@
         
         let db, auth;
         let isCloudActive = false;
-        const APP_ID = 'kpi-web-2026-production';
+        // ใช้ APP_ID ที่สั้นและสื่อสารง่าย
+        const APP_ID = 'kpi-team-2026';
 
         // Initialize Data Structure
         for(let i = 0; i < 12; i++) {
@@ -334,9 +333,9 @@
             const parts = e.target.id.split('-'); 
             const user = parts[0], field = parts[1];
             window.appData[window.currentMonth][user][field] = e.target.value;
-            localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData)); // Local Backup
+            localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData));
             window.calculateAll();
-            // Cloud Save Debounce
+            // หน่วงเวลาบันทึก 1.5 วินาที
             clearTimeout(window.cloudSaveTimeout);
             window.cloudSaveTimeout = setTimeout(() => window.saveToCloud(), 1500);
         };
@@ -344,13 +343,16 @@
         window.saveToCloud = async () => {
             if (!isCloudActive || !db) return;
             try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'kpi2026', 'shared_data');
-                await setDoc(docRef, { data: window.appData }, { merge: true });
-            } catch (err) { console.error("Cloud Save Failed:", err); }
+                // อ้างอิง Path ตามกฎข้อที่ 1
+                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'kpi_data_v1', 'shared_doc');
+                await setDoc(docRef, { data: window.appData, lastUpdate: new Date() }, { merge: true });
+            } catch (err) { 
+                console.error("Cloud Save Failed:", err);
+                document.getElementById('sync-status').innerHTML = '<i class="fas fa-exclamation-triangle text-red-500"></i> บันทึกไม่เข้า (เช็คสิทธิ์)';
+            }
         };
 
         window.calculateAll = function() {
-            const users = ['june', 'bird'];
             const getSum = (u, f1, f2) => (parseInt(window.appData[window.currentMonth][u][f1])||0) + (parseInt(window.appData[window.currentMonth][u][f2])||0);
             
             const jT = getSum('june', 'total', 'life_total');
@@ -521,42 +523,54 @@
 
         // --- Init App & Firebase ---
         async function start() {
-            const app = initializeApp(MY_FIREBASE_CONFIG);
-            auth = getAuth(app);
-            db = getFirestore(app);
-
-            // UI Status helper
-            const updateStatus = (online) => {
+            const updateStatus = (mode, detail = "") => {
                 const s = document.getElementById('sync-status');
-                if(online) {
+                if(mode === 'online') {
                     s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> ซิงค์ออนไลน์แล้ว';
                     s.className = 'ml-2 text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full border border-green-200 shadow-sm';
                     isCloudActive = true;
-                } else {
-                    s.innerHTML = '<i class="fas fa-save text-slate-400"></i> บันทึกในเครื่อง';
+                } else if(mode === 'offline') {
+                    s.innerHTML = `<i class="fas fa-save text-slate-400"></i> บันทึกในเครื่อง ${detail}`;
                     s.className = 'ml-2 text-xs bg-slate-100 text-slate-500 px-2 py-1 rounded-full border border-slate-200';
                     isCloudActive = false;
                 }
             };
 
-            onAuthStateChanged(auth, async (user) => {
-                if (!user) {
-                    try { await signInAnonymously(auth); } catch (e) { updateStatus(false); return; }
-                }
-                updateStatus(true);
-                // Listen to Cloud Data
-                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'kpi2026', 'shared_data');
-                onSnapshot(docRef, (snap) => {
-                    if (snap.exists()) {
-                        const cloudData = snap.data().data;
-                        if (JSON.stringify(cloudData) !== JSON.stringify(window.appData)) {
-                            window.appData = cloudData;
-                            localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData));
-                            window.changeMonth(window.currentMonth);
-                        }
+            try {
+                const app = initializeApp(MY_FIREBASE_CONFIG);
+                auth = getAuth(app);
+                db = getFirestore(app);
+
+                // ล็อกอินก่อนดึงข้อมูลตามกฎข้อที่ 3
+                await signInAnonymously(auth);
+                
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        updateStatus('online');
+                        // อ้างอิง Path ตามกฎข้อที่ 1
+                        const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'kpi_data_v1', 'shared_doc');
+                        onSnapshot(docRef, (snap) => {
+                            if (snap.exists()) {
+                                const cloudData = snap.data().data;
+                                if (JSON.stringify(cloudData) !== JSON.stringify(window.appData)) {
+                                    window.appData = cloudData;
+                                    localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData));
+                                    window.changeMonth(window.currentMonth);
+                                }
+                            }
+                        }, (err) => {
+                            console.error("Firestore error:", err);
+                            updateStatus('offline', '(ติดเรื่อง Permission)');
+                        });
+                    } else {
+                        updateStatus('offline', '(ยังไม่ล็อกอิน)');
                     }
                 });
-            });
+
+            } catch (e) {
+                console.error("Firebase Init Error:", e);
+                updateStatus('offline', '(Config ผิด)');
+            }
 
             document.querySelectorAll('.data-input').forEach(i => i.addEventListener('input', window.handleInput));
             window.changeMonth(0);
