@@ -104,7 +104,7 @@
                     <i class="fas fa-book text-indigo-600 btn-collapse"></i>
                     <h2 class="font-bold text-indigo-800 text-base">เกณฑ์การวัดผล KPI (Reference Rules)</h2>
                 </div>
-                <div class="text-xs text-indigo-500 italic">คลิกเพื่อดูเกณฑ์การให้คะแนน (เต็ม 13 คะแนน)</div>
+                <div class="text-xs text-indigo-500 italic">คลิกเพื่อดูเกณฑ์การให้คะแนนแต่ละหัวข้อ</div>
             </div>
             <div class="section-content grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-green-500">
@@ -144,7 +144,6 @@
                             <tr><td class="p-2 font-bold text-red-500 text-center">1</td><td class="p-2 text-right text-red-600">เกิน 51% (Overload)</td></tr>
                         </tbody>
                     </table>
-                    <p class="text-[10px] text-slate-400 mt-2 italic">*คะแนนรวม KPI = เขียว(5) + ส้ม(5) + ปริมาณงาน(3) = 13 คะแนน</p>
                 </div>
             </div>
         </section>
@@ -266,10 +265,6 @@
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-5">
                             <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-blue-600 text-2xl"></i> ผลงาน: จูน (June)</h3>
-                            <div class="text-right">
-                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Score</div>
-                                <div class="text-2xl font-black text-blue-700 bg-blue-100 px-4 py-1 rounded-xl shadow-inner border border-blue-200 mt-1" id="june-score-total">- / 13</div>
-                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-5 mb-5 text-center">
                             <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
@@ -304,10 +299,6 @@
                     <div class="relative z-10">
                         <div class="flex justify-between items-start mb-5">
                             <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-orange-500 text-2xl"></i> ผลงาน: เบิร์ด (Bird)</h3>
-                            <div class="text-right">
-                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Score</div>
-                                <div class="text-2xl font-black text-orange-700 bg-orange-100 px-4 py-1 rounded-xl shadow-inner border border-orange-200 mt-1" id="bird-score-total">- / 13</div>
-                            </div>
                         </div>
                         <div class="grid grid-cols-2 gap-5 mb-5 text-center">
                             <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
@@ -535,12 +526,10 @@
                 const gp = t > 0 ? (g/t*100) : 0;
                 const op = t > 0 ? ((g+o)/t*100) : 0;
                 const wp = (t+ot) > 0 ? (t/(t+ot)*100) : 0;
-                const tp = teamSum > 0 ? (t/teamSum*100) : 0;
 
                 const scoreG = t > 0 ? getScore(gp, 'g') : 0;
                 const scoreO = t > 0 ? getScore(op, 'o') : 0;
                 const scoreW = t > 0 ? getWScore(wp) : 0;
-                const totalScore = scoreG + scoreO + scoreW;
 
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
@@ -549,7 +538,6 @@
                 document.getElementById(`${u}-score-g`).innerText = `Score: ${scoreG}/5`;
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
                 document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
-                document.getElementById(`${u}-score-total`).innerText = `${t > 0 ? totalScore : '-'} / 13`;
             };
 
             procUser('june', 'bird'); procUser('bird', 'june');
