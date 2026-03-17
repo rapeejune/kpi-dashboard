@@ -3,298 +3,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบคำนวณ KPI ทีมเนื้อหา 2026</title>
+    <title>KPI SEO Dashboard 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- โหลดไลบรารีสำหรับ Export Excel -->
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
     <style>
-        body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Prompt', sans-serif; background-color: #f1f5f9; }
         input[type=number]::-webkit-inner-spin-button, 
         input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* การตั้งค่า PDF ให้บีบข้อมูลลงตารางหน้าเดียว */
+        /* การตั้งค่า PDF */
         @media print {
-            @page { size: landscape; margin: 8mm; }
+            @page { size: landscape; margin: 5mm; }
             .no-print { display: none !important; }
-            body { background-color: white !important; padding: 0 !important; font-size: 11px !important; }
-            * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            body { background-color: white !important; padding: 0 !important; }
+            .section-content { display: block !important; }
             .max-w-6xl { max-width: 100% !important; width: 100% !important; }
-            
-            /* ซ่อนส่วนกรอกข้อมูลเพื่อให้เหลือแต่ตารางสรุปและกราฟ */
-            .input-section, .month-selector { display: none !important; }
-            
-            /* ขยายตารางสรุปให้กว้างเต็มหน้า */
-            table { width: 100% !important; }
-            table th, table td { padding: 3px 4px !important; font-size: 10px !important; border: 1px solid #cbd5e1 !important; }
-            
-            .chart-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 15px !important; margin-bottom: 20px !important; }
+            table th, table td { padding: 3px !important; font-size: 9px !important; border: 0.5px solid #cbd5e1 !important; }
             .chart-container { height: 180px !important; }
-            
-            .result-cards { display: grid !important; grid-template-columns: 1fr 1fr !important; gap: 10px !important; margin-bottom: 15px !important; }
             .card-compact { padding: 10px !important; }
+        }
+
+        /* ตารางแบบ Sticky Column สำหรับมือถือ */
+        .table-container {
+            max-width: 100%;
+            overflow-x: auto;
+            position: relative;
+        }
+        .sticky-col {
+            position: sticky;
+            left: 0;
+            background-color: white;
+            z-index: 10;
+            box-shadow: 2px 0 5px -2px rgba(0,0,0,0.1);
+        }
+        .bg-summary { background-color: #f8fafc; }
+        
+        /* สไตล์ปุ่ม Collapse */
+        .btn-collapse {
+            transition: transform 0.3s ease;
+        }
+        .collapsed .btn-collapse {
+            transform: rotate(-90deg);
+        }
+        .section-content {
+            transition: all 0.3s ease-out;
+            overflow: hidden;
+        }
+        .collapsed .section-content {
+            max-height: 0;
+            margin-bottom: 0;
+            opacity: 0;
         }
     </style>
 </head>
-<body class="text-slate-800 p-4 md:p-8">
+<body class="text-slate-800 p-3 md:p-6 lg:p-8">
 
     <div class="max-w-6xl mx-auto">
         <!-- Header -->
-        <header class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <header class="mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
             <div class="flex items-center gap-4">
-                <div class="bg-blue-600 p-3 rounded-xl text-white shadow-lg no-print">
-                    <i class="fas fa-calculator text-2xl"></i>
+                <div class="bg-blue-600 w-12 h-12 rounded-xl flex items-center justify-center text-white shadow-lg no-print">
+                    <i class="fas fa-chart-pie text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">รายงาน KPI ทีมเนื้อหา 2026</h1>
-                    <p class="text-slate-500 font-medium text-sm">
-                        <span id="sync-status" class="bg-slate-200 text-slate-600 px-2 py-0.5 rounded-full border border-slate-300">
-                            <i class="fas fa-sync-alt fa-spin mr-1"></i> กำลังเชื่อมต่อฐานข้อมูล...
-                        </span>
-                    </p>
+                    <h1 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">KPI ทีมเนื้อหา 2026</h1>
+                    <div id="sync-status" class="mt-1 text-[10px] md:text-xs inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-slate-100 text-slate-500 border border-slate-200">
+                        <i class="fas fa-circle text-[8px] animate-pulse"></i> กำลังรอเชื่อมต่อ...
+                    </div>
                 </div>
             </div>
             
-            <!-- ปุ่มจัดการไฟล์ -->
             <div class="flex flex-wrap items-center gap-2 shrink-0 no-print">
+                <!-- Export Menu -->
                 <div class="relative group">
-                    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-bold transition-colors shadow-sm flex items-center gap-2">
-                        <i class="fas fa-file-export"></i> นำออกไฟล์ <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    <button class="bg-slate-800 hover:bg-black text-white px-4 py-2 rounded-xl font-medium shadow-sm flex items-center gap-2 text-sm transition-all">
+                        <i class="fas fa-download"></i> Export <i class="fas fa-chevron-down text-[10px]"></i>
                     </button>
-                    <div class="absolute right-0 mt-1 w-52 bg-white border border-slate-200 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden text-sm">
-                        <button onclick="exportExcel()" class="w-full text-left px-4 py-3 hover:bg-slate-50 font-medium text-slate-700 flex items-center gap-2 border-b">
-                            <i class="fas fa-file-excel text-green-600 text-lg"></i> โหลดไฟล์ Excel (.xlsx)
+                    <div class="absolute right-0 mt-2 w-52 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden text-sm">
+                        <button onclick="exportExcel()" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-center gap-3 border-b border-slate-100">
+                            <i class="fas fa-file-excel text-green-600"></i> Excel (.xlsx)
                         </button>
-                        <button onclick="exportCSV()" class="w-full text-left px-4 py-3 hover:bg-slate-50 font-medium text-slate-700 flex items-center gap-2 border-b">
-                            <i class="fas fa-file-csv text-blue-500 text-lg"></i> โหลดไฟล์ CSV
+                        <button onclick="exportCSV()" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-center gap-3 border-b border-slate-100">
+                            <i class="fas fa-file-csv text-blue-500"></i> CSV File
                         </button>
-                        <button onclick="exportData()" class="w-full text-left px-4 py-3 hover:bg-slate-50 font-medium text-slate-700 flex items-center gap-2">
-                            <i class="fas fa-database text-orange-500 text-lg"></i> โหลด JSON (สำรองระบบ)
+                        <button onclick="exportData()" class="w-full text-left px-4 py-3 hover:bg-slate-50 flex items-center gap-3">
+                            <i class="fas fa-database text-orange-500"></i> JSON Backup
                         </button>
                     </div>
                 </div>
-                <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
-                <button onclick="document.getElementById('import-file').click()" class="bg-white hover:bg-slate-50 text-slate-700 px-4 py-2 rounded-lg font-medium border border-slate-300 shadow-sm flex items-center gap-2">
-                    <i class="fas fa-file-import"></i> โหลดข้อมูล
-                </button>
-                <button onclick="window.print()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg font-bold shadow-md flex items-center gap-2">
-                    <i class="fas fa-file-pdf"></i> พิมพ์ / เซฟ PDF
+                <button onclick="window.print()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl font-bold shadow-md flex items-center gap-2 text-sm transition-all">
+                    <i class="fas fa-file-pdf"></i> PDF Report
                 </button>
             </div>
         </header>
 
-        <!-- เลือกเดือน (ซ่อนตอนพิมพ์) -->
-        <div class="month-selector mb-6 bg-white p-4 rounded-xl shadow-sm border border-slate-200 no-print flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="bg-blue-100 p-2 rounded-lg text-blue-600"><i class="fas fa-calendar-check"></i></div>
-                <span class="font-bold text-slate-700">ระบุข้อมูลของเดือน:</span>
-                <select id="month-select" class="px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none text-slate-700 font-bold bg-slate-50 cursor-pointer shadow-sm" onchange="changeMonth(this.value)">
-                    <option value="0">มกราคม</option><option value="1">กุมภาพันธ์</option><option value="2">มีนาคม</option><option value="3">เมษายน</option>
-                    <option value="4">พฤษภาคม</option><option value="5">มิถุนายน</option><option value="6">กรกฎาคม</option><option value="7">สิงหาคม</option>
-                    <option value="8">กันยายน</option><option value="9">ตุลาคม</option><option value="10">พฤศจิกายน</option><option value="11">ธันวาคม</option>
-                </select>
+        <!-- 1. ส่วนเลือกเดือนและกรอกข้อมูล -->
+        <section id="section-inputs" class="mb-6">
+            <div class="flex items-center justify-between mb-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 cursor-pointer" onclick="toggleSection('section-inputs')">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-edit text-blue-600 btn-collapse"></i>
+                    <h2 class="font-bold text-slate-700">ระบุข้อมูลดิบรายเดือน</h2>
+                </div>
+                <div class="flex items-center gap-4 no-print">
+                    <select id="month-select" class="px-3 py-1.5 border border-slate-300 rounded-lg text-sm font-bold bg-slate-50 outline-none" onclick="event.stopPropagation()" onchange="changeMonth(this.value)">
+                        <option value="0">มกราคม</option><option value="1">กุมภาพันธ์</option><option value="2">มีนาคม</option><option value="3">เมษายน</option>
+                        <option value="4">พฤษภาคม</option><option value="5">มิถุนายน</option><option value="6">กรกฎาคม</option><option value="7">สิงหาคม</option>
+                        <option value="8">กันยายน</option><option value="9">ตุลาคม</option><option value="10">พฤศจิกายน</option><option value="11">ธันวาคม</option>
+                    </select>
+                </div>
             </div>
-            <div class="hidden md:block text-xs text-slate-400 italic">พิมพ์ตัวเลขเสร็จ ระบบจะซิงค์กับทีมทันทีภายใน 1 วินาที</div>
-        </div>
 
-        <!-- ส่วนกรอกข้อมูล (ซ่อนตอนพิมพ์) -->
-        <div class="input-section grid md:grid-cols-3 gap-6 mb-8 no-print">
-            <!-- จูน -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
-                <h2 class="font-bold mb-4 flex items-center gap-2 text-slate-700 border-b pb-2"><i class="fas fa-user-circle text-blue-500"></i> จูน (June)</h2>
-                <div class="space-y-4">
-                    <div class="bg-blue-50/40 p-3 rounded-xl border border-blue-100">
-                        <div class="text-xs font-bold text-blue-700 uppercase mb-2">Main Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="june-total" class="data-input w-full px-2 py-2 border rounded focus:ring-1 focus:ring-blue-500 text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-green-600 mb-1">เขียว</label><input type="number" id="june-green" class="data-input w-full px-2 py-2 border rounded text-sm bg-green-50 font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-orange-600 mb-1">ส้ม</label><input type="number" id="june-orange" class="data-input w-full px-2 py-2 border rounded text-sm bg-orange-50 font-bold" placeholder="0"></div>
+            <div class="section-content grid md:grid-cols-3 gap-4 no-print">
+                <!-- Card June -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
+                    <h3 class="font-bold mb-3 text-slate-700 flex justify-between">จูน (June) <span class="text-[10px] text-blue-500 uppercase tracking-widest mt-1">Primary</span></h3>
+                    <div class="space-y-4">
+                        <div class="bg-blue-50/50 p-3 rounded-xl">
+                            <div class="text-[10px] font-bold text-blue-700 mb-2 uppercase tracking-tighter">Main Content</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-[9px] text-slate-500">Total</label><input type="number" id="june-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-600">Green</label><input type="number" id="june-green" class="data-input w-full p-2 border border-green-200 rounded-lg text-sm font-bold bg-green-50 shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-600">Orange</label><input type="number" id="june-orange" class="data-input w-full p-2 border border-orange-200 rounded-lg text-sm font-bold bg-orange-50 shadow-sm" placeholder="0"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-pink-50/40 p-3 rounded-xl border border-pink-100">
-                        <div class="text-xs font-bold text-pink-700 uppercase mb-2">Life Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="june-life_total" class="data-input w-full px-2 py-2 border rounded focus:ring-1 focus:ring-pink-500 text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-green-600 mb-1">เขียว</label><input type="number" id="june-life_green" class="data-input w-full px-2 py-2 border rounded text-sm bg-green-50 font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-orange-600 mb-1">ส้ม</label><input type="number" id="june-life_orange" class="data-input w-full px-2 py-2 border rounded text-sm bg-orange-50 font-bold" placeholder="0"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- เบิร์ด -->
-            <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
-                <h2 class="font-bold mb-4 flex items-center gap-2 text-slate-700 border-b pb-2"><i class="fas fa-user-circle text-orange-500"></i> เบิร์ด (Bird)</h2>
-                <div class="space-y-4">
-                    <div class="bg-orange-50/40 p-3 rounded-xl border border-orange-100">
-                        <div class="text-xs font-bold text-orange-700 uppercase mb-2">Main Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="bird-total" class="data-input w-full px-2 py-2 border rounded focus:ring-1 focus:ring-orange-500 text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-green-600 mb-1">เขียว</label><input type="number" id="bird-green" class="data-input w-full px-2 py-2 border rounded text-sm bg-green-50 font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-orange-600 mb-1">ส้ม</label><input type="number" id="bird-orange" class="data-input w-full px-2 py-2 border rounded text-sm bg-orange-50 font-bold" placeholder="0"></div>
-                        </div>
-                    </div>
-                    <div class="bg-pink-50/40 p-3 rounded-xl border border-pink-100">
-                        <div class="text-xs font-bold text-pink-700 uppercase mb-2">Life Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="bird-life_total" class="data-input w-full px-2 py-2 border rounded focus:ring-1 focus:ring-pink-500 text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-green-600 mb-1">เขียว</label><input type="number" id="bird-life_green" class="data-input w-full px-2 py-2 border rounded text-sm bg-green-50 font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-orange-600 mb-1">ส้ม</label><input type="number" id="bird-life_orange" class="data-input w-full px-2 py-2 border rounded text-sm bg-orange-50 font-bold" placeholder="0"></div>
+                        <div class="bg-rose-50/50 p-3 rounded-xl">
+                            <div class="text-[10px] font-bold text-rose-700 mb-2 uppercase tracking-tighter">Life Content</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-[9px] text-slate-500">Total</label><input type="number" id="june-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-600">Green</label><input type="number" id="june-life_green" class="data-input w-full p-2 border border-green-200 rounded-lg text-sm font-bold bg-green-50 shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-600">Orange</label><input type="number" id="june-life_orange" class="data-input w-full p-2 border border-orange-200 rounded-lg text-sm font-bold bg-orange-50 shadow-sm" placeholder="0"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <!-- ตัง -->
-            <div class="bg-slate-50 rounded-xl shadow-sm border border-slate-200 p-5 opacity-90 border-t-4 border-slate-400">
-                <h2 class="font-bold mb-4 flex items-center gap-2 text-slate-600 border-b pb-2"><i class="fas fa-user-tag text-slate-400"></i> ตัง (Support)</h2>
-                <div class="space-y-4">
-                    <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
-                        <div class="text-xs font-bold text-slate-500 uppercase mb-2 tracking-tight">Main Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="tang-total" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-slate-500 mb-1">เขียว</label><input type="number" id="tang-green" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ส้ม</label><input type="number" id="tang-orange" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
+                <!-- Card Bird -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
+                    <h3 class="font-bold mb-3 text-slate-700 flex justify-between">เบิร์ด (Bird) <span class="text-[10px] text-orange-500 uppercase tracking-widest mt-1">Primary</span></h3>
+                    <div class="space-y-4">
+                        <div class="bg-orange-50/50 p-3 rounded-xl">
+                            <div class="text-[10px] font-bold text-orange-700 mb-2 uppercase tracking-tighter">Main Content</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-[9px] text-slate-500">Total</label><input type="number" id="bird-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-600">Green</label><input type="number" id="bird-green" class="data-input w-full p-2 border border-green-200 rounded-lg text-sm font-bold bg-green-50 shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-600">Orange</label><input type="number" id="bird-orange" class="data-input w-full p-2 border border-orange-200 rounded-lg text-sm font-bold bg-orange-50 shadow-sm" placeholder="0"></div>
+                            </div>
                         </div>
-                    </div>
-                    <div class="bg-slate-100 p-3 rounded-xl border border-slate-200">
-                        <div class="text-xs font-bold text-slate-500 uppercase mb-2 tracking-tight">Life Content</div>
-                        <div class="grid grid-cols-3 gap-3">
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ยอดรวม</label><input type="number" id="tang-life_total" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-slate-500 mb-1">เขียว</label><input type="number" id="tang-life_green" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
-                            <div><label class="block text-[10px] text-slate-500 mb-1">ส้ม</label><input type="number" id="tang-life_orange" class="data-input w-full px-2 py-2 border rounded text-sm font-bold" placeholder="0"></div>
+                        <div class="bg-rose-50/50 p-3 rounded-xl">
+                            <div class="text-[10px] font-bold text-rose-700 mb-2 uppercase tracking-tighter">Life Content</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-[9px] text-slate-500">Total</label><input type="number" id="bird-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-600">Green</label><input type="number" id="bird-life_green" class="data-input w-full p-2 border border-green-200 rounded-lg text-sm font-bold bg-green-50 shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-600">Orange</label><input type="number" id="bird-life_orange" class="data-input w-full p-2 border border-orange-200 rounded-lg text-sm font-bold bg-orange-50 shadow-sm" placeholder="0"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <!-- Card Tang -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 opacity-80 border-t-4 border-slate-400">
+                    <h3 class="font-bold mb-3 text-slate-600 flex justify-between">ตัง (Tang) <span class="text-[10px] text-slate-400 uppercase tracking-widest mt-1">Support</span></h3>
+                    <div class="space-y-4">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-200">
+                            <div class="text-[10px] font-bold text-slate-500 mb-2 uppercase tracking-tighter">Overall Output</div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div><label class="text-[9px] text-slate-400">Main</label><input type="number" id="tang-total" class="data-input w-full p-2 border border-slate-200 rounded-lg text-sm shadow-sm" placeholder="0"></div>
+                                <div><label class="text-[9px] text-slate-400">Life</label><input type="number" id="tang-life_total" class="data-input w-full p-2 border border-slate-200 rounded-lg text-sm shadow-sm" placeholder="0"></div>
+                                <div class="opacity-50 pointer-events-none"><label class="text-[9px]">N/A</label><input type="text" disabled class="w-full p-2 border rounded-lg text-sm bg-slate-100" placeholder="-"></div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-400 italic">หมายเหตุ: ยอดของตังจะถูกนำไปรวมเป็นภาพรวมของทีม (Team Output) แต่จะไม่นำมาคิดสัดส่วน 50/50 ค่ะ</p>
+                    </div>
+                </div>
             </div>
-        </div>
+        </section>
 
-        <!-- การ์ดคะแนนรายเดือน (ใช้ประกอบรายงาน) -->
-        <h2 class="text-xl font-bold mb-4 text-slate-800 flex items-center gap-2">
-            <i class="fas fa-star text-yellow-500"></i> ผลประเมินรายเดือน: <span id="txt-month-display" class="text-blue-600">มกราคม</span>
-        </h2>
-        <div class="result-cards grid md:grid-cols-2 gap-6 mb-10">
-            <!-- Card June -->
-            <div class="bg-white rounded-2xl shadow-md p-6 border-t-8 border-blue-500 card-compact relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-user-circle text-8xl text-blue-900"></i></div>
-                <h3 class="font-bold mb-4 text-lg text-slate-700">KPI สรุป: จูน (June)</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-                        <div class="text-[10px] text-green-700 font-bold uppercase mb-1">SEO Green (เป้า 20%)</div>
-                        <div class="text-2xl font-black text-green-600" id="june-res-green-pct">0%</div>
-                        <div class="mt-2 text-xs font-bold" id="june-score-g">Score: -</div>
-                    </div>
-                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                        <div class="text-[10px] text-orange-700 font-bold uppercase mb-1">SEO Orange+ (เป้า 80%)</div>
-                        <div class="text-2xl font-black text-orange-500" id="june-res-orange-pct">0%</div>
-                        <div class="mt-2 text-xs font-bold" id="june-score-o">Score: -</div>
-                    </div>
-                </div>
-                <div class="mt-4 pt-4 border-t flex justify-between items-center">
-                    <span class="text-sm font-bold text-slate-600">สัดส่วนภาระงาน (Workload):</span>
-                    <span class="text-xl font-black text-blue-600" id="june-res-workload-pct">0%</span>
+        <!-- 2. ผลประเมินรายเดือน -->
+        <section id="section-monthly" class="mb-8">
+            <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSection('section-monthly')">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-check-double text-green-600 btn-collapse"></i>
+                    <h2 class="text-xl font-bold text-slate-800">สรุปคะแนน: <span id="txt-month-label" class="text-blue-600">มกราคม</span></h2>
                 </div>
             </div>
-            <!-- Card Bird -->
-            <div class="bg-white rounded-2xl shadow-md p-6 border-t-8 border-orange-500 card-compact relative overflow-hidden">
-                <div class="absolute top-0 right-0 p-4 opacity-10"><i class="fas fa-user-circle text-8xl text-orange-900"></i></div>
-                <h3 class="font-bold mb-4 text-lg text-slate-700">KPI สรุป: เบิร์ด (Bird)</h3>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-green-50 p-4 rounded-xl border border-green-100">
-                        <div class="text-[10px] text-green-700 font-bold uppercase mb-1">SEO Green (เป้า 20%)</div>
-                        <div class="text-2xl font-black text-green-600" id="bird-res-green-pct">0%</div>
-                        <div class="mt-2 text-xs font-bold" id="bird-score-g">Score: -</div>
+            
+            <div class="section-content grid md:grid-cols-2 gap-6">
+                <!-- Result June -->
+                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-blue-500 card-compact flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold mb-4 text-slate-700 flex items-center gap-2 underline decoration-blue-200 decoration-4 underline-offset-4">
+                            <i class="fas fa-award text-blue-500"></i> Performance: จูน (June)
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50/50 p-4 rounded-2xl border border-green-100 text-center">
+                                <div class="text-[10px] text-green-700 font-bold uppercase tracking-widest mb-1">SEO เขียว (20%)</div>
+                                <div class="text-3xl font-black text-green-600" id="june-res-green-pct">0%</div>
+                                <div class="mt-2 inline-block px-3 py-0.5 rounded-full bg-green-600 text-white text-[10px] font-bold" id="june-score-g">Score: 0</div>
+                            </div>
+                            <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100 text-center">
+                                <div class="text-[10px] text-orange-700 font-bold uppercase tracking-widest mb-1">ส้มขึ้นไป (80%)</div>
+                                <div class="text-3xl font-black text-orange-500" id="june-res-orange-pct">0%</div>
+                                <div class="mt-2 inline-block px-3 py-0.5 rounded-full bg-orange-600 text-white text-[10px] font-bold" id="june-score-o">Score: 0</div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="bg-orange-50 p-4 rounded-xl border border-orange-100">
-                        <div class="text-[10px] text-orange-700 font-bold uppercase mb-1">SEO Orange+ (เป้า 80%)</div>
-                        <div class="text-2xl font-black text-orange-500" id="bird-res-orange-pct">0%</div>
-                        <div class="mt-2 text-xs font-bold" id="bird-score-o">Score: -</div>
+                    <div class="pt-4 border-t flex justify-between items-center">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-tighter">ภาระงานสะสม (Workload):</span>
+                        <span class="text-2xl font-black text-blue-600" id="june-res-workload-pct">0%</span>
                     </div>
                 </div>
-                <div class="mt-4 pt-4 border-t flex justify-between items-center">
-                    <span class="text-sm font-bold text-slate-600">สัดส่วนภาระงาน (Workload):</span>
-                    <span class="text-xl font-black text-orange-600" id="bird-res-workload-pct">0%</span>
-                </div>
-            </div>
-        </div>
 
-        <!-- กราฟแนวโน้มตลอดปี -->
-        <div class="chart-grid grid md:grid-cols-2 gap-6 mb-10 page-break-inside-avoid">
-            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                <h4 class="text-xs font-bold text-center mb-4 uppercase text-slate-500 tracking-widest">ปริมาณงานโพสต์สะสม (Main + Life)</h4>
-                <div class="chart-container relative h-[250px]"><canvas id="volumeChart"></canvas></div>
+                <!-- Result Bird -->
+                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-orange-500 card-compact flex flex-col justify-between">
+                    <div>
+                        <h3 class="font-bold mb-4 text-slate-700 flex items-center gap-2 underline decoration-orange-200 decoration-4 underline-offset-4">
+                            <i class="fas fa-award text-orange-500"></i> Performance: เบิร์ด (Bird)
+                        </h3>
+                        <div class="grid grid-cols-2 gap-4 mb-6">
+                            <div class="bg-green-50/50 p-4 rounded-2xl border border-green-100 text-center">
+                                <div class="text-[10px] text-green-700 font-bold uppercase tracking-widest mb-1">SEO เขียว (20%)</div>
+                                <div class="text-3xl font-black text-green-600" id="bird-res-green-pct">0%</div>
+                                <div class="mt-2 inline-block px-3 py-0.5 rounded-full bg-green-600 text-white text-[10px] font-bold" id="bird-score-g">Score: 0</div>
+                            </div>
+                            <div class="bg-orange-50/50 p-4 rounded-2xl border border-orange-100 text-center">
+                                <div class="text-[10px] text-orange-700 font-bold uppercase tracking-widest mb-1">ส้มขึ้นไป (80%)</div>
+                                <div class="text-3xl font-black text-orange-500" id="bird-res-orange-pct">0%</div>
+                                <div class="mt-2 inline-block px-3 py-0.5 rounded-full bg-orange-600 text-white text-[10px] font-bold" id="bird-score-o">Score: 0</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pt-4 border-t flex justify-between items-center">
+                        <span class="text-sm font-bold text-slate-500 uppercase tracking-tighter">ภาระงานสะสม (Workload):</span>
+                        <span class="text-2xl font-black text-orange-600" id="bird-res-workload-pct">0%</span>
+                    </div>
+                </div>
             </div>
-            <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                <h4 class="text-xs font-bold text-center mb-4 uppercase text-slate-500 tracking-widest">สัดส่วนภาระงาน % (Target 50/50)</h4>
-                <div class="chart-container relative h-[250px]"><canvas id="workloadChart"></canvas></div>
-            </div>
-        </div>
+        </section>
 
-        <!-- ตารางสรุปภาพรวม "ชุดใหญ่" ครบทุกเดือน -->
-        <h2 class="text-2xl font-extrabold mb-5 text-slate-800 flex items-center gap-3 page-break-inside-avoid mt-12">
-            <i class="fas fa-table text-blue-600"></i> ตารางสรุปผลงานรายปี 2026 (Full Report)
-        </h2>
-        <div class="bg-white rounded-xl shadow-xl border border-slate-300 overflow-hidden mb-12 page-break-inside-avoid">
-            <div class="overflow-x-auto">
-                <table class="w-full text-xs text-left border-collapse">
-                    <thead class="bg-slate-800 text-white uppercase font-bold text-[10px]">
-                        <tr>
-                            <th class="p-3 border-r border-slate-700">ช่วงเวลา</th>
-                            <th class="p-2 text-center border-r border-slate-700 bg-blue-700/80" colspan="4">จูน (June)</th>
-                            <th class="p-2 text-center border-r border-slate-700 bg-orange-600/80" colspan="4">เบิร์ด (Bird)</th>
-                            <th class="p-2 text-center">รวมทีม</th>
-                        </tr>
-                        <tr class="bg-slate-700 text-[9px]">
-                            <th class="p-2 border-r border-slate-600"></th>
-                            <th class="p-1 text-center border-r border-slate-600">โพสต์รวม</th>
-                            <th class="p-1 text-center border-r border-slate-600 text-green-300 font-bold">เขียว%</th>
-                            <th class="p-1 text-center border-r border-slate-600 text-orange-300 font-bold">ส้ม%</th>
-                            <th class="p-1 text-center border-r border-slate-600">ภาระ%</th>
-                            <th class="p-1 text-center border-r border-slate-600">โพสต์รวม</th>
-                            <th class="p-1 text-center border-r border-slate-600 text-green-300 font-bold">เขียว%</th>
-                            <th class="p-1 text-center border-r border-slate-600 text-orange-300 font-bold">ส้ม%</th>
-                            <th class="p-1 text-center border-r border-slate-600">ภาระ%</th>
-                            <th class="p-1 text-center">ทั้งหมด</th>
-                        </tr>
-                    </thead>
-                    <tbody id="summary-table-body">
-                        <!-- แถวข้อมูลรายเดือน, ไตรมาส และปี จะถูกเติมด้วย JS -->
-                    </tbody>
-                </table>
+        <!-- 3. กราฟวิเคราะห์ -->
+        <section id="section-charts" class="mb-10 no-print">
+            <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSection('section-charts')">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-chart-line text-indigo-600 btn-collapse"></i>
+                    <h2 class="text-xl font-bold text-slate-800 uppercase tracking-tight">Trends & Visualization</h2>
+                </div>
             </div>
-        </div>
+            <div class="section-content chart-grid grid md:grid-cols-2 gap-6">
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                    <h4 class="text-xs font-bold text-center mb-4 text-slate-400 uppercase tracking-widest">ปริมาณโพสต์รายเดือน (Volume)</h4>
+                    <div class="chart-container relative h-[220px]"><canvas id="volumeChart"></canvas></div>
+                </div>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
+                    <h4 class="text-xs font-bold text-center mb-4 text-slate-400 uppercase tracking-widest">สัดส่วนภาระงาน (Share %)</h4>
+                    <div class="chart-container relative h-[220px]"><canvas id="workloadChart"></canvas></div>
+                </div>
+            </div>
+        </section>
 
-        <!-- แดชบอร์ดคะแนนเฉลี่ยทั้งปี -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20 page-break-inside-avoid">
-            <div class="bg-blue-600 text-white p-5 rounded-2xl shadow-lg border-b-4 border-blue-800">
-                <div class="text-[10px] opacity-70 uppercase font-bold tracking-widest mb-1">June Avg. Green</div>
-                <div class="text-3xl font-black" id="avg-j-green">-</div>
+        <!-- 4. ตารางสรุปภาพรวมปี -->
+        <section id="section-table">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-5 gap-4">
+                <div class="flex items-center gap-3 cursor-pointer" onclick="toggleSection('section-table')">
+                    <i class="fas fa-table text-blue-600 btn-collapse"></i>
+                    <h2 class="text-2xl font-black text-slate-800">ตารางสรุปผลงานรายปี 2026</h2>
+                </div>
+                
+                <!-- Filter Controls -->
+                <div class="flex flex-wrap items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-200 no-print">
+                    <span class="text-xs font-bold text-slate-500 uppercase"><i class="fas fa-filter mr-1"></i> Filter:</span>
+                    <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" checked onchange="toggleTableCol('col-tang', this.checked)"> ตัง</label>
+                    <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" checked onchange="toggleTableCol('col-posts', this.checked)"> ยอดโพสต์</label>
+                    <label class="flex items-center gap-1.5 text-xs cursor-pointer"><input type="checkbox" checked onchange="toggleTableCol('col-kpi', this.checked)"> KPI %</label>
+                </div>
             </div>
-            <div class="bg-blue-800 text-white p-5 rounded-2xl shadow-lg border-b-4 border-blue-950">
-                <div class="text-[10px] opacity-70 uppercase font-bold tracking-widest mb-1">June Avg. Orange</div>
-                <div class="text-3xl font-black" id="avg-j-orange">-</div>
+
+            <div class="section-content bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden mb-12">
+                <div class="table-container">
+                    <table id="master-table" class="w-full text-left border-collapse min-w-[1000px]">
+                        <thead class="bg-slate-900 text-white uppercase text-[10px] font-bold">
+                            <tr>
+                                <th class="p-3 sticky-col bg-slate-900 border-r border-slate-700">ช่วงเวลา</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-blue-700/80" colspan="4">จูน (June)</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-orange-600/80" colspan="4">เบิร์ด (Bird)</th>
+                                <th class="p-2 text-center col-tang">ตัง</th>
+                                <th class="p-2 text-center">ยอดรวม</th>
+                            </tr>
+                            <tr class="bg-slate-800 text-[9px]">
+                                <th class="p-2 sticky-col bg-slate-800 border-r border-slate-600 font-normal italic">Months</th>
+                                <th class="p-1 text-center border-r border-slate-600 col-posts">โพสต์</th>
+                                <th class="p-1 text-center border-r border-slate-600 text-green-400 col-kpi">เขียว%</th>
+                                <th class="p-1 text-center border-r border-slate-600 text-orange-400 col-kpi">ส้ม%</th>
+                                <th class="p-1 text-center border-r border-slate-600 col-kpi font-black">ภาระ%</th>
+                                <th class="p-1 text-center border-r border-slate-600 col-posts">โพสต์</th>
+                                <th class="p-1 text-center border-r border-slate-600 text-green-400 col-kpi">เขียว%</th>
+                                <th class="p-1 text-center border-r border-slate-600 text-orange-400 col-kpi">ส้ม%</th>
+                                <th class="p-1 text-center border-r border-slate-600 col-kpi font-black">ภาระ%</th>
+                                <th class="p-1 text-center border-r border-slate-600 col-tang text-slate-400">Output</th>
+                                <th class="p-1 text-center">Team</th>
+                            </tr>
+                        </thead>
+                        <tbody id="summary-table-body" class="text-[11px] md:text-xs"></tbody>
+                    </table>
+                </div>
             </div>
-            <div class="bg-orange-500 text-white p-5 rounded-2xl shadow-lg border-b-4 border-orange-700">
-                <div class="text-[10px] opacity-70 uppercase font-bold tracking-widest mb-1">Bird Avg. Green</div>
-                <div class="text-3xl font-black" id="avg-b-green">-</div>
-            </div>
-            <div class="bg-orange-700 text-white p-5 rounded-2xl shadow-lg border-b-4 border-orange-900">
-                <div class="text-[10px] opacity-70 uppercase font-bold tracking-widest mb-1">Bird Avg. Orange</div>
-                <div class="text-3xl font-black" id="avg-b-orange">-</div>
-            </div>
-        </div>
+        </section>
     </div>
 
-    <!-- Application Core & Cloud Logic -->
+    <!-- Application Logic -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ==========================================
-        // 🔴 ข้อมูล Firebase ของคุณจูน 🔴
-        // ==========================================
+        // CONFIG สำหรับคุณจูน -----------------------------------------
         const MY_FIREBASE_CONFIG = {
             apiKey: "AIzaSyApB-yNQdDO6Q2XhllJ8c4g-B7UH0Wrd1A",
             authDomain: "kpi-web-2026.firebaseapp.com",
@@ -304,7 +327,7 @@
             appId: "1:690245467154:web:6ac86cd3e50bd7bf9caccb",
             measurementId: "G-QFRYSMS3CW"
         };
-        // ==========================================
+        // ----------------------------------------------------------
 
         const months = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
         const shortMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
@@ -313,9 +336,9 @@
         let db, auth;
         let isCloudActive = false;
         let vChart = null, wChart = null;
-        const APP_ID = 'kpi-web-2026-production-final';
+        const APP_ID = 'kpi-web-2026-v4';
 
-        // Initialize Data Structure
+        // Init Data
         for(let i=0; i<12; i++) {
             appData[i] = {
                 june: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
@@ -324,13 +347,20 @@
             };
         }
 
-        // Load from LocalStorage as backup
-        const local = localStorage.getItem('kpiTeamData2026');
-        if(local) { try { appData = {...appData, ...JSON.parse(local)}; } catch(e){} }
+        // --- View Controls ---
+        window.toggleSection = (id) => {
+            const el = document.getElementById(id);
+            el.classList.toggle('collapsed');
+        };
+
+        window.toggleTableCol = (className, isShow) => {
+            const cells = document.querySelectorAll('.' + className);
+            cells.forEach(c => c.style.display = isShow ? '' : 'none');
+        };
 
         window.changeMonth = (idx) => {
             currentMonth = parseInt(idx);
-            document.getElementById('txt-month-display').innerText = months[currentMonth];
+            document.getElementById('txt-month-label').innerText = months[currentMonth];
             const d = appData[currentMonth];
             ['june', 'bird', 'tang'].forEach(u => {
                 ['total', 'green', 'orange', 'life_total', 'life_green', 'life_orange'].forEach(f => {
@@ -344,8 +374,8 @@
         const handleInput = (e) => {
             const [u, f] = e.target.id.split('-');
             appData[currentMonth][u][f] = e.target.value;
-            localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
             calculateAll();
+            localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
             clearTimeout(window.saveTimer);
             window.saveTimer = setTimeout(saveToCloud, 1000);
         };
@@ -353,18 +383,18 @@
         const saveToCloud = async () => {
             if(!isCloudActive || !db) return;
             try {
-                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master_data');
+                const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master');
                 await setDoc(docRef, { data: appData, updated: new Date() }, { merge: true });
             } catch(e) {}
         };
 
         const calculateAll = () => {
-            const getScore = (p, t) => {
-                if (t === 'g') return p < 15 ? 1 : p < 20 ? 2 : p < 25 ? 3 : p < 30 ? 4 : 5;
+            const getScore = (p, type) => {
+                if (type === 'g') return p < 15 ? 1 : p < 20 ? 2 : p < 25 ? 3 : p < 30 ? 4 : 5;
                 return p < 70 ? 1 : p < 80 ? 2 : p < 85 ? 3 : p < 90 ? 4 : 5;
             };
 
-            const proc = (u, ou) => {
+            const process = (u, ou) => {
                 const d = appData[currentMonth][u], od = appData[currentMonth][ou];
                 const t = (parseInt(d.total)||0) + (parseInt(d.life_total)||0);
                 const g = (parseInt(d.green)||0) + (parseInt(d.life_green)||0);
@@ -378,12 +408,11 @@
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
                 document.getElementById(`${u}-res-workload-pct`).innerText = wp.toFixed(1) + '%';
-                
                 document.getElementById(`${u}-score-g`).innerText = `Score: ${t>0?getScore(gp,'g'):0} / 5`;
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${t>0?getScore(op,'o'):0} / 5`;
             };
 
-            proc('june', 'bird'); proc('bird', 'june');
+            process('june', 'bird'); process('bird', 'june');
             updateTable();
             updateCharts();
         };
@@ -391,10 +420,8 @@
         const updateTable = () => {
             const tbody = document.getElementById('summary-table-body');
             tbody.innerHTML = '';
-            let y = { jt:0, jg:0, jo:0, bt:0, bg:0, bo:0, tt:0, scores: {jg:[], jo:[], bg:[], bo:[]} };
+            let y = { jt:0, jg:0, jo:0, bt:0, bg:0, bo:0, tt:0 };
             let q = { jt:0, jg:0, jo:0, bt:0, bg:0, bo:0, tt:0 };
-
-            const calcScore = (p, t) => t==='g' ? (p<15?1:p<20?2:p<25?3:p<30?4:5) : (p<70?1:p<80?2:p<85?3:p<90?4:5);
 
             for(let i=0; i<12; i++) {
                 const d = appData[i];
@@ -406,49 +433,36 @@
                 const bo = (parseInt(d.bird.orange)||0) + (parseInt(d.bird.life_orange)||0);
                 const tt = (parseInt(d.tang.total)||0) + (parseInt(d.tang.life_total)||0);
 
-                // Collect scores for yearly avg
-                if(jt > 0) { y.scores.jg.push(calcScore(jg/jt*100,'g')); y.scores.jo.push(calcScore((jg+jo)/jt*100,'o')); }
-                if(bt > 0) { y.scores.bg.push(calcScore(bg/bt*100,'g')); y.scores.bo.push(calcScore((bg+bo)/bt*100,'o')); }
-
                 q.jt+=jt; q.jg+=jg; q.jo+=jo; q.bt+=bt; q.bg+=bg; q.bo+=bo; q.tt+=tt;
                 y.jt+=jt; y.jg+=jg; y.jo+=jo; y.bt+=bt; y.bg+=bg; y.bo+=bo; y.tt+=tt;
 
                 tbody.appendChild(createRow(shortMonths[i], jt, jg, jo, bt, bg, bo, tt, false));
-                
                 if((i+1)%3 === 0) {
                     tbody.appendChild(createRow(`Summary Q${(i+1)/3}`, q.jt, q.jg, q.jo, q.bt, q.bg, q.bo, q.tt, true));
                     q = { jt:0, jg:0, jo:0, bt:0, bg:0, bo:0, tt:0 };
                 }
             }
-            
-            // Grand Annual Summary
-            tbody.appendChild(createRow('รวมผลงานปี 2026', y.jt, y.jg, y.jo, y.bt, y.bg, y.bo, y.tt, true, 'bg-slate-900 text-white font-black text-xs border-t-2 border-slate-500'));
-
-            // Final Scores Dashboard
-            const avg = (arr) => arr.length ? (arr.reduce((a,b)=>a+b,0)/arr.length).toFixed(2) : '-';
-            document.getElementById('avg-j-green').innerText = avg(y.scores.jg);
-            document.getElementById('avg-j-orange').innerText = avg(y.scores.jo);
-            document.getElementById('avg-b-green').innerText = avg(y.scores.bg);
-            document.getElementById('avg-b-orange').innerText = avg(y.scores.bo);
+            tbody.appendChild(createRow('Total 2026', y.jt, y.jg, y.jo, y.bt, y.bg, y.bo, y.tt, true, 'bg-slate-900 text-white border-t-2 border-slate-500 sticky-col-black'));
         };
 
         const createRow = (label, jt, jg, jo, bt, bg, bo, tt, isS, ex = '') => {
             const tr = document.createElement('tr');
-            tr.className = `border-b border-slate-200 ${isS ? 'font-bold bg-slate-100/80 text-slate-800' : 'hover:bg-slate-50'} ${ex}`;
+            tr.className = `border-b border-slate-200 ${isS ? 'bg-summary font-black' : 'hover:bg-blue-50/20'} ${ex}`;
             const pct = (p,t) => t > 0 ? (p/t*100).toFixed(1)+'%' : '-';
             const jMT = jt + bt;
-            const jBg = !isS ? 'bg-blue-50/10' : '';
-            const bBg = !isS ? 'bg-orange-50/10' : '';
+            const sColClass = isS ? (ex.includes('bg-slate-900') ? 'bg-slate-900 text-white' : 'bg-summary') : '';
+            
             tr.innerHTML = `
-                <td class="p-2 border-r border-slate-200">${label}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${jBg}">${jt||0}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${jBg} text-green-600">${pct(jg,jt)}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${jBg} text-orange-500">${pct(jg+jo,jt)}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${jBg}">${pct(jt,jMT)}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${bBg}">${bt||0}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${bBg} text-green-600">${pct(bg,bt)}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${bBg} text-orange-500">${pct(bg+bo,bt)}</td>
-                <td class="p-1 text-center border-r border-slate-200 ${bBg}">${pct(bt,jMT)}</td>
+                <td class="p-2 md:p-3 sticky-col border-r border-slate-200 ${sColClass}">${label}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-posts">${jt||0}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi text-green-600">${pct(jg,jt)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi text-orange-600">${pct(jg+jo,jt)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi font-bold text-blue-600">${pct(jt,jMT)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-posts">${bt||0}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi text-green-600">${pct(bg,bt)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi text-orange-600">${pct(bg+bo,bt)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-kpi font-bold text-orange-600">${pct(bt,jMT)}</td>
+                <td class="p-1 text-center border-r border-slate-100 col-tang text-slate-400">${tt||0}</td>
                 <td class="p-1 text-center font-bold text-slate-700">${jt+bt+tt}</td>
             `;
             return tr;
@@ -456,14 +470,14 @@
 
         const updateCharts = () => {
             const vData = { labels: shortMonths, datasets: [
-                { label:'จูน', data:[], backgroundColor:'#3b82f6', borderRadius:3 },
-                { label:'เบิร์ด', data:[], backgroundColor:'#f97316', borderRadius:3 },
-                { label:'ตัง', data:[], backgroundColor:'#94a3b8', borderRadius:3 }
+                { label:'จูน', data:[], backgroundColor:'#3b82f6', borderRadius:2 },
+                { label:'เบิร์ด', data:[], backgroundColor:'#f97316', borderRadius:2 },
+                { label:'ตัง', data:[], backgroundColor:'#94a3b8', borderRadius:2 }
             ]};
             const wData = { labels: shortMonths, datasets: [
                 { label:'เป้า 50%', data:Array(12).fill(50), borderColor:'#10b981', borderDash:[5,5], pointRadius:0, fill:false, borderWidth:1 },
-                { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)', borderWidth:3 },
-                { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)', borderWidth:3 }
+                { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)', borderWidth:2 },
+                { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)', borderWidth:2 }
             ]};
 
             for(let i=0; i<12; i++) {
@@ -472,48 +486,52 @@
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
                 vData.datasets[0].data.push(jt); vData.datasets[1].data.push(bt); vData.datasets[2].data.push(tt);
-                const total = jt + bt;
-                wData.datasets[1].data.push(total > 0 ? (jt/total*100).toFixed(1) : 0);
-                wData.datasets[2].data.push(total > 0 ? (bt/total*100).toFixed(1) : 0);
+                const sum = jt + bt;
+                wData.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
+                wData.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
             }
 
             if(vChart) vChart.destroy();
-            vChart = new Chart(document.getElementById('volumeChart'), { type:'bar', data:vData, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}}, scales:{x:{stacked:true},y:{stacked:true}} }});
+            vChart = new Chart(document.getElementById('volumeChart'), { type:'bar', data:vData, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:8,font:{size:9}}}}, scales:{x:{stacked:true,grid:{display:false}},y:{stacked:true}} }});
             if(wChart) wChart.destroy();
-            wChart = new Chart(document.getElementById('workloadChart'), { type:'line', data:wData, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}}, scales:{y:{min:0,max:100}} }});
+            wChart = new Chart(document.getElementById('workloadChart'), { type:'line', data:wData, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:8,font:{size:9}}}}, scales:{x:{grid:{display:false}},y:{min:0,max:100}} }});
         };
 
-        // --- Export & Tooling ---
+        // --- EXPORTS ---
         window.exportExcel = () => {
-            const rows = [["ปี 2026", "KPI SEO Team Dashboard"], ["เดือน", "จูน Main รวม", "จูน Main เขียว", "จูน Main ส้ม", "จูน Life รวม", "จูน Life เขียว", "จูน Life ส้ม", "เบิร์ด Main รวม", "เบิร์ด Main เขียว", "เบิร์ด Main ส้ม", "เบิร์ด Life รวม", "เบิร์ด Life เขียว", "เบิร์ด Life ส้ม", "ตัง Main รวม", "ตัง Life รวม"]];
-            for(let i=0; i<12; i++) {
+            const rows = [["KPI 2026 Master Report"], ["Month", "June Posts", "June Green %", "June Orange %", "Bird Posts", "Bird Green %", "Bird Orange %", "Tang Output", "Team Total"]];
+            for(let i=0; i<12; i++){
                 const d = appData[i];
-                rows.push([ months[i], d.june.total, d.june.green, d.june.orange, d.june.life_total, d.june.life_green, d.june.life_orange, d.bird.total, d.bird.green, d.bird.orange, d.bird.life_total, d.bird.life_green, d.bird.life_orange, d.tang.total, d.tang.life_total ]);
+                const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
+                const jg = (parseInt(d.june.green)||0)+(parseInt(d.june.life_green)||0);
+                const jo = (parseInt(d.june.orange)||0)+(parseInt(d.june.life_orange)||0);
+                const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
+                const bg = (parseInt(d.bird.green)||0)+(parseInt(d.bird.life_green)||0);
+                const bo = (parseInt(d.bird.orange)||0)+(parseInt(d.bird.life_orange)||0);
+                const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
+                rows.push([ months[i], jt, (jg/jt*100||0).toFixed(1), ((jg+jo)/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), ((bg+bo)/bt*100||0).toFixed(1), tt, jt+bt+tt ]);
             }
-            const wb = XLSX.utils.book_new();
-            const ws = XLSX.utils.aoa_to_sheet(rows);
-            XLSX.utils.book_append_sheet(wb, ws, "MasterKPI");
-            XLSX.writeFile(wb, `KPI_Team_Report_Full_2026.xlsx`);
+            XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(rows), "KPI"), "KPI_Report_2026.xlsx");
         };
 
         window.exportCSV = () => {
-            let csv = "\uFEFFเดือน,จูน_ยอดรวมทั้งหมด,เบิร์ด_ยอดรวมทั้งหมด,ตัง_ยอดรวมทั้งหมด\n";
+            let csv = "\uFEFFMonth,June_Total,Bird_Total,Tang_Total,Team_Sum\n";
             for(let i=0; i<12; i++){
                 const d = appData[i];
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
-                csv += `${months[i]},${jt},${bt},${tt}\n`;
+                csv += `${months[i]},${jt},${bt},${tt},${jt+bt+tt}\n`;
             }
             const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a"); a.href = url; a.download = `KPI_Dashboard_Summary_2026.csv`; a.click();
+            const a = document.createElement("a"); a.href = url; a.download = `KPI_2026_Raw.csv`; a.click();
         };
 
         window.exportData = () => {
             const blob = new Blob([JSON.stringify(appData)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
-            const a = document.createElement("a"); a.href = url; a.download = `KPI_System_Backup_2026.json`; a.click();
+            const a = document.createElement("a"); a.href = url; a.download = `KPI_System_Backup.json`; a.click();
         };
 
         window.importData = (e) => {
@@ -521,19 +539,16 @@
             const r = new FileReader();
             r.onload = (ev) => {
                 try {
-                    const parsed = JSON.parse(ev.target.result);
-                    if(parsed[0] && parsed[0].june) {
-                        appData = parsed;
-                        localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
-                        changeMonth(currentMonth);
-                        alert("✅ กู้คืนข้อมูลสำเร็จ ระบบจะเริ่มซิงค์ขึ้นออนไลน์ทันที");
-                    }
-                } catch(err) { alert("❌ ไฟล์ไม่ถูกต้อง"); }
+                    appData = JSON.parse(ev.target.result);
+                    localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
+                    changeMonth(currentMonth);
+                    alert("✅ Restore Successful");
+                } catch(err) { alert("❌ Invalid File"); }
             };
             r.readAsText(f);
         };
 
-        // --- Init & Start ---
+        // --- Start App ---
         const init = async () => {
             try {
                 const app = initializeApp(MY_FIREBASE_CONFIG);
@@ -545,9 +560,7 @@
                         const s = document.getElementById('sync-status');
                         s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> ซิงค์ออนไลน์เรียบร้อย';
                         s.className = 'bg-green-50 text-green-700 px-2 py-0.5 rounded-full border border-green-200 shadow-sm';
-                        
-                        const docRef = doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master_data');
-                        onSnapshot(docRef, (snap) => {
+                        onSnapshot(doc(db, 'artifacts', APP_ID, 'public', 'data', 'v1', 'master'), (snap) => {
                             if(snap.exists()) {
                                 const cloud = snap.data().data;
                                 if(JSON.stringify(cloud) !== JSON.stringify(appData)) {
@@ -559,9 +572,7 @@
                         });
                     }
                 });
-            } catch(e) { 
-                document.getElementById('sync-status').innerHTML = '<i class="fas fa-save text-slate-400"></i> โหมดบันทึกออฟไลน์ (Local)';
-            }
+            } catch(e) { document.getElementById('sync-status').innerText = 'Offline Mode'; }
             document.querySelectorAll('.data-input').forEach(i => i.addEventListener('input', handleInput));
             changeMonth(new Date().getMonth());
         };
