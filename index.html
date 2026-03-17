@@ -39,12 +39,10 @@
                 padding: 0 !important;
                 font-size: 12px !important; /* ลดขนาดฟอนต์ภาพรวม */
             }
-            /* บังคับให้สีพื้นหลัง (Background color) ติดไปใน PDF ด้วย */
             * { 
                 -webkit-print-color-adjust: exact !important; 
                 print-color-adjust: exact !important; 
             }
-            /* ให้พอดีหน้ากระดาษ */
             .max-w-6xl {
                 max-width: 100% !important;
                 width: 100% !important;
@@ -53,11 +51,9 @@
                 box-shadow: none !important;
                 border: 1px solid #e2e8f0 !important;
             }
-            /* แก้ปัญหาตารางโดนตัดขอบ */
             .overflow-x-auto {
                 overflow: visible !important;
             }
-            /* บีบตารางให้กะทัดรัดขึ้น */
             table th, table td {
                 padding-top: 4px !important;
                 padding-bottom: 4px !important;
@@ -72,7 +68,6 @@
             .mb-8 { margin-bottom: 15px !important; }
             .text-sm { font-size: 11px !important; }
             .text-xs { font-size: 9px !important; }
-            /* จัดการกราฟตอนปริ้นท์ */
             .chart-container {
                 min-height: 250px !important;
             }
@@ -90,18 +85,34 @@
                 </div>
                 <div>
                     <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">รายงาน KPI ทีมเนื้อหา</h1>
-                    <p class="text-slate-500 font-medium mt-1">สรุปผลสัดส่วน SEO และภาระงานประจำปี 2026</p>
+                    <p class="text-slate-500 font-medium mt-1">
+                        สรุปผลสัดส่วน SEO และภาระงานประจำปี 2026 
+                        <span id="sync-status" class="ml-2 text-xs bg-slate-200 text-slate-600 px-2 py-1 rounded-full"><i class="fas fa-save"></i> บันทึกในเครื่อง</span>
+                    </p>
                 </div>
             </div>
             
-            <!-- ปุ่มจัดการไฟล์ (บันทึก/โหลด/PDF) -->
+            <!-- ปุ่มจัดการไฟล์ (บันทึก/โหลด/PDF/CSV) -->
             <div class="flex flex-wrap items-center gap-2 shrink-0 no-print">
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
+                
+                <!-- ปุ่มเมนู Dropdown สำหรับ Export -->
+                <div class="relative group">
+                    <button class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2 text-sm">
+                        <i class="fas fa-download"></i> นำออกข้อมูล <i class="fas fa-chevron-down text-xs ml-1"></i>
+                    </button>
+                    <div class="absolute right-0 mt-1 w-48 bg-white border border-slate-200 rounded-lg shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                        <button onclick="exportCSV()" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-sm font-medium text-slate-700 flex items-center gap-2 border-b">
+                            <i class="fas fa-file-excel text-green-600"></i> เป็นไฟล์ CSV (Excel)
+                        </button>
+                        <button onclick="exportData()" class="w-full text-left px-4 py-3 hover:bg-slate-50 text-sm font-medium text-slate-700 flex items-center gap-2">
+                            <i class="fas fa-file-code text-blue-600"></i> เป็นไฟล์ JSON (ระบบ)
+                        </button>
+                    </div>
+                </div>
+
                 <button onclick="document.getElementById('import-file').click()" class="bg-white hover:bg-slate-50 text-slate-700 px-3 py-2 rounded-lg font-medium transition-colors border border-slate-300 flex items-center gap-2 shadow-sm text-sm">
                     <i class="fas fa-file-import"></i> โหลด JSON
-                </button>
-                <button onclick="exportData()" class="bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg font-medium transition-colors shadow-sm flex items-center gap-2 text-sm">
-                    <i class="fas fa-save"></i> เซฟ JSON (ฐานข้อมูล)
                 </button>
                 <button onclick="window.print()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-lg font-bold transition-colors shadow-sm flex items-center gap-2">
                     <i class="fas fa-file-pdf"></i> เซฟเป็น PDF
@@ -187,7 +198,7 @@
                 <div class="grid grid-cols-3 gap-2 mb-3">
                     <div>
                         <label class="block text-xs font-medium text-slate-600 mb-1">ยอดรวม</label>
-                        <input type="number" id="bird-total" class="data-input w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-1 focus:ring-pink-500 outline-none text-sm" placeholder="0">
+                        <input type="number" id="bird-total" class="data-input w-full px-2 py-1.5 border border-slate-300 rounded focus:ring-1 focus:ring-orange-500 outline-none text-sm" placeholder="0">
                     </div>
                     <div>
                         <label class="block text-xs font-medium text-green-700 mb-1">เขียว</label>
@@ -361,7 +372,7 @@
             </div>
         </div>
 
-        <!-- กราฟแนวโน้มตลอดปี (เพิ่มใหม่) -->
+        <!-- กราฟแนวโน้มตลอดปี -->
         <h2 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-2 mt-8 pt-4 page-break-inside-avoid">
             <i class="fas fa-chart-line text-blue-600"></i> กราฟแนวโน้มผลงานตลอดปี 2026
         </h2>
@@ -417,475 +428,365 @@
 
     </div>
 
-    <!-- ส่วนของการคำนวณและจัดการข้อมูล (JavaScript) -->
-    <script>
-        const monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
-        const shortMonthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-        let currentMonth = 0; // 0 = มกราคม
-        
-        // ตัวแปรเก็บ Instance ของกราฟ
-        let volumeChartInstance = null;
-        let workloadChartInstance = null;
+    <!-- ส่วนของการคำนวณ จัดการข้อมูล และ Cloud Sync -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ตั้งค่าฟอนต์เริ่มต้นให้ Chart.js ตรงกับเว็บ
+        // กำหนดให้ฟังก์ชันต่างๆ ใช้งานแบบ Global ได้ (เพื่อให้ onclick ใน HTML เรียกใช้ได้)
+        window.monthNames = ["มกราคม", "กุมภาพันธ์", "มีนาคม", "เมษายน", "พฤษภาคม", "มิถุนายน", "กรกฎาคม", "สิงหาคม", "กันยายน", "ตุลาคม", "พฤศจิกายน", "ธันวาคม"];
+        window.shortMonthNames = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+        window.currentMonth = 0;
+        window.volumeChartInstance = null;
+        window.workloadChartInstance = null;
+
         Chart.defaults.font.family = "'Prompt', sans-serif";
         Chart.defaults.color = '#64748b';
-        
-        // โครงสร้างข้อมูลสำหรับ 12 เดือน (รองรับ Main + Life)
-        let appData = {};
+
+        // โครงสร้างข้อมูลเริ่มต้น
+        window.appData = {};
         for(let i = 0; i < 12; i++) {
-            appData[i] = {
+            window.appData[i] = {
                 june: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
                 bird: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
                 tang: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' }
             };
         }
 
-        // โหลดข้อมูลจาก LocalStorage ถ้าเคยบันทึกไว้
+        // โหลดจาก LocalStorage เบื้องต้น
         const savedData = localStorage.getItem('kpiTeamData2026');
         if (savedData) {
             try {
-                // ผสานข้อมูลเดิมที่มีอยู่เข้ากับโครงสร้างข้อมูล (ข้อมูลเก่าจะ map ลงช่อง Main อัตโนมัติ)
-                const parsedData = JSON.parse(savedData);
-                appData = { ...appData, ...parsedData };
-            } catch(e) {
-                console.error("Error loading saved data");
-            }
+                window.appData = { ...window.appData, ...JSON.parse(savedData) };
+            } catch(e) { console.error(e); }
         }
 
-        // เริ่มต้นการทำงาน
-        window.onload = function() {
-            // ผูก Event ให้ทุกช่อง input
-            document.querySelectorAll('.data-input').forEach(input => {
-                input.addEventListener('input', handleInput);
+        // --- ระบบ Cloud Sync (Firebase) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'kpi-team-2026';
+        let db, auth;
+        let isCloudActive = false;
+
+        async function initCloudSync() {
+            let firebaseConfig;
+            if (typeof __firebase_config !== 'undefined') {
+                firebaseConfig = JSON.parse(__firebase_config);
+            } else {
+                return; // ใช้งานออฟไลน์ (Local) ถ้าไม่มี config
+            }
+
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (err) {
+                console.error("Auth error", err);
+                return;
+            }
+
+            onAuthStateChanged(auth, (user) => {
+                if (!user) return;
+                
+                // อัปเดต UI ว่าต่อคลาวด์ติดแล้ว
+                const statusEl = document.getElementById('sync-status');
+                statusEl.innerHTML = '<i class="fas fa-cloud text-green-500"></i> ซิงค์ออนไลน์แล้ว';
+                statusEl.className = 'ml-2 text-xs bg-green-50 text-green-700 px-2 py-1 rounded-full border border-green-200';
+                isCloudActive = true;
+
+                // ดึงข้อมูล Real-time
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'kpi2026', 'shared_data');
+                onSnapshot(docRef, (docSnap) => {
+                    if (docSnap.exists()) {
+                        const remoteData = docSnap.data().data;
+                        if (remoteData && JSON.stringify(remoteData) !== JSON.stringify(window.appData)) {
+                            window.appData = remoteData;
+                            localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData)); // Backup to local
+                            window.changeMonth(window.currentMonth);
+                        }
+                    }
+                }, (err) => console.error(err));
             });
-            // โหลดข้อมูลเดือนแรกมาแสดง
-            changeMonth(0);
+        }
+
+        window.saveToCloud = async () => {
+            if (!isCloudActive || !auth || !auth.currentUser || !db) return;
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'kpi2026', 'shared_data');
+                await setDoc(docRef, { data: window.appData }, { merge: true });
+            } catch (err) { console.error(err); }
         };
 
-        // เมื่อมีการเปลี่ยนเดือน
-        function changeMonth(monthIndex) {
-            currentMonth = parseInt(monthIndex);
+        // Initialize App
+        window.changeMonth = function(monthIndex) {
+            window.currentMonth = parseInt(monthIndex);
+            document.getElementById('display-month').innerText = window.monthNames[window.currentMonth];
             
-            // อัปเดตข้อความแสดงชื่อเดือน
-            document.getElementById('display-month').innerText = monthNames[currentMonth];
+            const md = window.appData[window.currentMonth];
+            const users = ['june', 'bird', 'tang'];
+            const fields = ['total', 'green', 'orange', 'life_total', 'life_green', 'life_orange'];
             
-            // ดึงข้อมูลเดือนนั้นมาใส่ในฟอร์ม
-            const md = appData[currentMonth];
+            users.forEach(user => {
+                fields.forEach(field => {
+                    const el = document.getElementById(`${user}-${field}`);
+                    if (el) el.value = md[user][field] || '';
+                });
+            });
             
-            // จูน
-            document.getElementById('june-total').value = md.june.total || '';
-            document.getElementById('june-green').value = md.june.green || '';
-            document.getElementById('june-orange').value = md.june.orange || '';
-            document.getElementById('june-life_total').value = md.june.life_total || '';
-            document.getElementById('june-life_green').value = md.june.life_green || '';
-            document.getElementById('june-life_orange').value = md.june.life_orange || '';
-            
-            // เบิร์ด
-            document.getElementById('bird-total').value = md.bird.total || '';
-            document.getElementById('bird-green').value = md.bird.green || '';
-            document.getElementById('bird-orange').value = md.bird.orange || '';
-            document.getElementById('bird-life_total').value = md.bird.life_total || '';
-            document.getElementById('bird-life_green').value = md.bird.life_green || '';
-            document.getElementById('bird-life_orange').value = md.bird.life_orange || '';
-            
-            // ตัง
-            document.getElementById('tang-total').value = md.tang.total || '';
-            document.getElementById('tang-green').value = md.tang.green || '';
-            document.getElementById('tang-orange').value = md.tang.orange || '';
-            document.getElementById('tang-life_total').value = md.tang.life_total || '';
-            document.getElementById('tang-life_green').value = md.tang.life_green || '';
-            document.getElementById('tang-life_orange').value = md.tang.life_orange || '';
-            
-            // คำนวณผลลัพธ์
-            calculateAll();
-        }
+            window.calculateAll();
+        };
 
-        // เมื่อมีการพิมพ์ข้อมูลในช่องใดๆ
-        function handleInput(e) {
-            const id = e.target.id;
-            const parts = id.split('-'); 
-            const user = parts[0];
-            const field = parts[1]; // field เช่น total, life_total
+        window.handleInput = function(e) {
+            const parts = e.target.id.split('-'); 
+            const user = parts[0], field = parts[1];
             
-            // อัปเดตข้อมูลในโครงสร้าง และบันทึกลง LocalStorage ทันที
-            appData[currentMonth][user][field] = e.target.value;
-            localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
+            window.appData[window.currentMonth][user][field] = e.target.value;
+            localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData)); // Save Local
             
-            // คำนวณใหม่
-            calculateAll();
-        }
+            window.calculateAll();
+            
+            // ป้องกันการยิงขึ้น Cloud รัวๆ ทุกตัวอักษร (Debounce)
+            clearTimeout(window.cloudSaveTimeout);
+            window.cloudSaveTimeout = setTimeout(() => window.saveToCloud(), 1000);
+        };
 
-        // ฟังก์ชันอ่านค่าและป้องกัน NaN (ไม่ใช่ตัวเลข) โดยดึงจาก state โดยตรง
-        function getValFromState(user, field) {
-            const val = parseInt(appData[currentMonth][user][field]);
+        // --- Functions for Calculation & UI ---
+        window.getValFromState = function(user, field) {
+            const val = parseInt(window.appData[window.currentMonth][user][field]);
             return isNaN(val) ? 0 : val;
-        }
+        };
 
-        // ฟังก์ชันคำนวณคะแนน SEO เขียว (เป้าหมาย 20-24%)
-        function getGreenScore(pct) {
+        window.getGreenScore = pct => {
             if (pct < 15) return 1;
-            if (pct >= 15 && pct < 20) return 2;
-            if (pct >= 20 && pct < 25) return 3;
-            if (pct >= 25 && pct < 30) return 4;
-            return 5;
-        }
+            if (pct < 20) return 2;
+            if (pct < 25) return 3;
+            if (pct < 30) return 4; return 5;
+        };
 
-        // ฟังก์ชันคำนวณคะแนน SEO ส้มขึ้นไป (เป้าหมาย 80-84%)
-        function getOrangeScore(pct) {
+        window.getOrangeScore = pct => {
             if (pct < 70) return 1;
-            if (pct >= 70 && pct < 80) return 2;
-            if (pct >= 80 && pct < 85) return 3;
-            if (pct >= 85 && pct < 90) return 4;
-            return 5;
-        }
+            if (pct < 80) return 2;
+            if (pct < 85) return 3;
+            if (pct < 90) return 4; return 5;
+        };
 
-        // ฟังก์ชันคำนวณคะแนนภาระงาน (Workload เป้าหมาย 50% ± 1%)
-        function getWorkloadScore(pct) {
+        window.getWorkloadScore = pct => {
             if (pct === 0) return { score: 0, text: '-', icon: 'fa-minus-circle', color: 'text-blue-700' };
             if (pct < 45) return { score: 1, text: '1 คะแนน (งานน้อยไป)', icon: 'fa-exclamation-circle', color: 'text-orange-500' };
-            if (pct >= 45 && pct < 49) return { score: 2, text: '2 คะแนน', icon: 'fa-check', color: 'text-blue-500' };
-            if (pct >= 49 && pct <= 51) return { score: 3, text: '3 คะแนน (สมดุล 50% ± 1%)', icon: 'fa-check-circle', color: 'text-green-500' };
+            if (pct < 49) return { score: 2, text: '2 คะแนน', icon: 'fa-check', color: 'text-blue-500' };
+            if (pct <= 51) return { score: 3, text: '3 คะแนน (สมดุล 50% ± 1%)', icon: 'fa-check-circle', color: 'text-green-500' };
             return { score: 'Overload', text: 'Overload (เกิน 51%)', icon: 'fa-exclamation-triangle', color: 'text-red-500' };
-        }
+        };
 
-        // ฟังก์ชันอัปเดตหน้าจอสำหรับแต่ละคน
-        function updateUserCard(userPrefix, total, green, orange, mainTotal) {
+        window.updateUserCard = function(userPrefix, total, green, orange, mainTotal) {
             const greenPct = total > 0 ? (green / total) * 100 : 0;
-            const orangePct = total > 0 ? ((orange + green) / total) * 100 : 0; // ส้มขึ้นไป
+            const orangePct = total > 0 ? ((orange + green) / total) * 100 : 0;
             const workloadPct = mainTotal > 0 ? (total / mainTotal) * 100 : 0;
 
-            const greenScore = total > 0 ? getGreenScore(greenPct) : 0;
-            const orangeScore = total > 0 ? getOrangeScore(orangePct) : 0;
-            const workloadData = getWorkloadScore(workloadPct);
+            const gScore = total > 0 ? window.getGreenScore(greenPct) : 0;
+            const oScore = total > 0 ? window.getOrangeScore(orangePct) : 0;
+            const wData = window.getWorkloadScore(workloadPct);
 
             document.getElementById(`${userPrefix}-res-green-pct`).innerText = greenPct.toFixed(2) + '%';
             document.getElementById(`${userPrefix}-res-green-bar`).style.width = Math.min(greenPct, 100) + '%';
-            document.getElementById(`${userPrefix}-res-green-score`).innerText = `ได้คะแนน: ${greenScore} / 5`;
+            document.getElementById(`${userPrefix}-res-green-score`).innerText = `ได้คะแนน: ${gScore} / 5`;
 
             document.getElementById(`${userPrefix}-res-orange-pct`).innerText = orangePct.toFixed(2) + '%';
             document.getElementById(`${userPrefix}-res-orange-bar`).style.width = Math.min(orangePct, 100) + '%';
-            document.getElementById(`${userPrefix}-res-orange-score`).innerText = `ได้คะแนน: ${orangeScore} / 5`;
+            document.getElementById(`${userPrefix}-res-orange-score`).innerText = `ได้คะแนน: ${oScore} / 5`;
 
             document.getElementById(`${userPrefix}-res-workload-pct`).innerText = workloadPct.toFixed(2) + '%';
             document.getElementById(`${userPrefix}-res-workload-bar`).style.width = Math.min(workloadPct, 100) + '%';
             
             const wlScoreEl = document.getElementById(`${userPrefix}-res-workload-score`);
-            wlScoreEl.innerHTML = `<i class="fas ${workloadData.icon}"></i> คะแนน: ${workloadData.text}`;
-            wlScoreEl.className = `text-right font-bold text-lg ${workloadData.color}`;
-        }
+            wlScoreEl.innerHTML = `<i class="fas ${wData.icon}"></i> คะแนน: ${wData.text}`;
+            wlScoreEl.className = `text-right font-bold text-lg ${wData.color}`;
+        };
 
-        // ฟังก์ชันหลักที่จะคำนวณทุกอย่าง
-        function calculateAll() {
-            // ดึงข้อมูล จูน (รวม Main + Life)
-            const jTotal = getValFromState('june', 'total') + getValFromState('june', 'life_total');
-            const jGreen = getValFromState('june', 'green') + getValFromState('june', 'life_green');
-            const jOrange = getValFromState('june', 'orange') + getValFromState('june', 'life_orange');
+        window.calculateAll = function() {
+            const jT = window.getValFromState('june', 'total') + window.getValFromState('june', 'life_total');
+            const jG = window.getValFromState('june', 'green') + window.getValFromState('june', 'life_green');
+            const jO = window.getValFromState('june', 'orange') + window.getValFromState('june', 'life_orange');
 
-            // ดึงข้อมูล เบิร์ด (รวม Main + Life)
-            const bTotal = getValFromState('bird', 'total') + getValFromState('bird', 'life_total');
-            const bGreen = getValFromState('bird', 'green') + getValFromState('bird', 'life_green');
-            const bOrange = getValFromState('bird', 'orange') + getValFromState('bird', 'life_orange');
+            const bT = window.getValFromState('bird', 'total') + window.getValFromState('bird', 'life_total');
+            const bG = window.getValFromState('bird', 'green') + window.getValFromState('bird', 'life_green');
+            const bO = window.getValFromState('bird', 'orange') + window.getValFromState('bird', 'life_orange');
 
-            // อัปเดตการ์ดผลลัพธ์ประจำเดือน
-            const mainTotal = jTotal + bTotal;
-            updateUserCard('june', jTotal, jGreen, jOrange, mainTotal);
-            updateUserCard('bird', bTotal, bGreen, bOrange, mainTotal);
+            const mainTotal = jT + bT;
+            window.updateUserCard('june', jT, jG, jO, mainTotal);
+            window.updateUserCard('bird', bT, bG, bO, mainTotal);
 
-            // อัปเดตตารางและกราฟทั้งปี
-            updateSummaryTable();
-            updateCharts();
-        }
+            window.updateSummaryTable();
+            window.updateCharts();
+        };
 
-        // ฟังก์ชันสร้างตารางสรุป (รายเดือน / ไตรมาส / ปี)
-        function updateSummaryTable() {
+        window.updateSummaryTable = function() {
             const tbody = document.getElementById('summary-table-body');
             tbody.innerHTML = '';
             
-            let yearTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
-            let qTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
+            let yT = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
+            let qT = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
 
             for(let i = 0; i < 12; i++) {
-                const data = appData[i];
+                const d = window.appData[i];
+                const jt = (parseInt(d.june.total) || 0) + (parseInt(d.june.life_total) || 0);
+                const jg = (parseInt(d.june.green) || 0) + (parseInt(d.june.life_green) || 0);
+                const jo = (parseInt(d.june.orange) || 0) + (parseInt(d.june.life_orange) || 0);
                 
-                // คำนวณผลรวมต่อคนต่อเดือน (Main + Life)
-                const jt = (parseInt(data.june.total) || 0) + (parseInt(data.june.life_total) || 0);
-                const jg = (parseInt(data.june.green) || 0) + (parseInt(data.june.life_green) || 0);
-                const jo = (parseInt(data.june.orange) || 0) + (parseInt(data.june.life_orange) || 0);
+                const bt = (parseInt(d.bird.total) || 0) + (parseInt(d.bird.life_total) || 0);
+                const bg = (parseInt(d.bird.green) || 0) + (parseInt(d.bird.life_green) || 0);
+                const bo = (parseInt(d.bird.orange) || 0) + (parseInt(d.bird.life_orange) || 0);
                 
-                const bt = (parseInt(data.bird.total) || 0) + (parseInt(data.bird.life_total) || 0);
-                const bg = (parseInt(data.bird.green) || 0) + (parseInt(data.bird.life_green) || 0);
-                const bo = (parseInt(data.bird.orange) || 0) + (parseInt(data.bird.life_orange) || 0);
-                
-                const tt = (parseInt(data.tang.total) || 0) + (parseInt(data.tang.life_total) || 0);
+                const tt = (parseInt(d.tang.total) || 0) + (parseInt(d.tang.life_total) || 0);
 
-                // สะสมยอดสำหรับไตรมาส (Quarter)
-                qTotals.jt += jt; qTotals.jg += jg; qTotals.jo += jo;
-                qTotals.bt += bt; qTotals.bg += bg; qTotals.bo += bo;
-                qTotals.tt += tt;
+                qT.jt += jt; qT.jg += jg; qT.jo += jo; qT.bt += bt; qT.bg += bg; qT.bo += bo; qT.tt += tt;
+                yT.jt += jt; yT.jg += jg; yT.jo += jo; yT.bt += bt; yT.bg += bg; yT.bo += bo; yT.tt += tt;
 
-                // สะสมยอดสำหรับทั้งปี (Yearly)
-                yearTotals.jt += jt; yearTotals.jg += jg; yearTotals.jo += jo;
-                yearTotals.bt += bt; yearTotals.bg += bg; yearTotals.bo += bo;
-                yearTotals.tt += tt;
+                tbody.appendChild(window.createSummaryRow(window.shortMonthNames[i], jt, jg, jo, bt, bg, bo, tt, false));
 
-                // สร้างบรรทัดของเดือนนั้นๆ
-                tbody.appendChild(createSummaryRow(shortMonthNames[i], jt, jg, jo, bt, bg, bo, tt, false));
-
-                // สร้างบรรทัดสรุปเมื่อครบไตรมาส (เดือน 3, 6, 9, 12)
                 if ((i + 1) % 3 === 0) {
-                    const qNum = (i + 1) / 3;
-                    tbody.appendChild(createSummaryRow(`สรุป Q${qNum}`, qTotals.jt, qTotals.jg, qTotals.jo, qTotals.bt, qTotals.bg, qTotals.bo, qTotals.tt, true, 'bg-slate-100 font-bold border-y-2 border-slate-300'));
-                    
-                    // รีเซ็ตยอดไตรมาสเมื่อขึ้นไตรมาสใหม่
-                    qTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
+                    tbody.appendChild(window.createSummaryRow(`สรุป Q${(i+1)/3}`, qT.jt, qT.jg, qT.jo, qT.bt, qT.bg, qT.bo, qT.tt, true, 'bg-slate-100 font-bold border-y-2 border-slate-300'));
+                    qT = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
                 }
             }
+            tbody.appendChild(window.createSummaryRow('ยอดรวมปี 2026', yT.jt, yT.jg, yT.jo, yT.bt, yT.bg, yT.bo, yT.tt, true, 'bg-slate-800 text-white font-bold text-base shadow-inner'));
+        };
 
-            // สร้างบรรทัดสรุปยอดรวมทั้งปี
-            tbody.appendChild(createSummaryRow('ยอดรวมปี 2026', yearTotals.jt, yearTotals.jg, yearTotals.jo, yearTotals.bt, yearTotals.bg, yearTotals.bo, yearTotals.tt, true, 'bg-slate-800 text-white font-bold text-base shadow-inner'));
-        }
-
-        // ฟังก์ชันช่วยสร้าง HTML สำหรับตารางสรุป
-        function createSummaryRow(label, jt, jg, jo, bt, bg, bo, tt, isSummary, extraClass = '') {
+        window.createSummaryRow = function(label, jt, jg, jo, bt, bg, bo, tt, isSummary, extraClass = '') {
             const tr = document.createElement('tr');
             tr.className = `border-b border-slate-200 hover:bg-slate-50 transition-colors ${extraClass}`;
             
-            // สูตรคำนวณ % ให้แสดง 1 ตำแหน่ง
             const calcPct = (part, total) => total > 0 ? ((part / total) * 100).toFixed(1) + '%' : '-';
-            
             const jMainTotal = jt + bt;
-            const teamTotal = jt + bt + tt;
             
-            // คำนวณ KPI จูน
-            const jGreenPct = calcPct(jg, jt);
-            const jOrangePct = calcPct(jg + jo, jt); // ส้มขึ้นไป = ส้ม + เขียว
-            const jWorkPct = calcPct(jt, jMainTotal);
-
-            // คำนวณ KPI เบิร์ด
-            const bGreenPct = calcPct(bg, bt);
-            const bOrangePct = calcPct(bg + bo, bt);
-            const bWorkPct = calcPct(bt, jMainTotal);
-
-            // จัดการสีตัวอักษรเฉพาะบรรทัดที่ไม่ใช่สรุป (เพื่อให้แถบสรุปปีที่เป็นสีดำอ่านง่ายขึ้น)
-            const jgColor = isSummary ? '' : 'text-green-600 font-medium';
-            const joColor = isSummary ? '' : 'text-orange-500 font-medium';
-            const jwColor = isSummary ? '' : 'text-blue-600 font-medium';
-            const bgColor = isSummary ? '' : 'text-green-600 font-medium';
-            const boColor = isSummary ? '' : 'text-orange-500 font-medium';
-            const bwColor = isSummary ? '' : 'text-orange-600 font-medium'; // เปลี่ยนสีเป็นส้ม
-
-            const jBg = isSummary ? '' : 'bg-blue-50/30';
-            const bBg = isSummary ? '' : 'bg-orange-50/30';
-
             tr.innerHTML = `
                 <td class="py-3 px-4 text-left whitespace-nowrap">${label}</td>
-                <td class="py-3 px-2 text-center border-l border-slate-300 ${jBg}">${jt || '-'}</td>
-                <td class="py-3 px-2 text-center ${jgColor} ${jBg}">${jGreenPct}</td>
-                <td class="py-3 px-2 text-center ${joColor} ${jBg}">${jOrangePct}</td>
-                <td class="py-3 px-2 text-center ${jwColor} ${jBg}">${jWorkPct}</td>
-                <td class="py-3 px-2 text-center border-l border-slate-300 ${bBg}">${bt || '-'}</td>
-                <td class="py-3 px-2 text-center ${bgColor} ${bBg}">${bGreenPct}</td>
-                <td class="py-3 px-2 text-center ${boColor} ${bBg}">${bOrangePct}</td>
-                <td class="py-3 px-2 text-center ${bwColor} ${bBg}">${bWorkPct}</td>
-                <td class="py-3 px-4 text-center border-l border-slate-300 font-bold">${teamTotal || '-'}</td>
+                <td class="py-3 px-2 text-center border-l border-slate-300 ${!isSummary?'bg-blue-50/30':''}">${jt || '-'}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-green-600 font-medium bg-blue-50/30':''}">${calcPct(jg, jt)}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-orange-500 font-medium bg-blue-50/30':''}">${calcPct(jg+jo, jt)}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-blue-600 font-medium bg-blue-50/30':''}">${calcPct(jt, jMainTotal)}</td>
+                <td class="py-3 px-2 text-center border-l border-slate-300 ${!isSummary?'bg-orange-50/30':''}">${bt || '-'}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-green-600 font-medium bg-orange-50/30':''}">${calcPct(bg, bt)}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-orange-500 font-medium bg-orange-50/30':''}">${calcPct(bg+bo, bt)}</td>
+                <td class="py-3 px-2 text-center ${!isSummary?'text-orange-600 font-medium bg-orange-50/30':''}">${calcPct(bt, jMainTotal)}</td>
+                <td class="py-3 px-4 text-center border-l border-slate-300 font-bold">${jt + bt + tt || '-'}</td>
             `;
             return tr;
-        }
+        };
 
-        // --- ระบบสร้างกราฟ (Chart.js) ---
-        function updateCharts() {
-            const dataJuneVol = [];
-            const dataBirdVol = [];
-            const dataTangVol = [];
-            
-            const dataJuneWorkload = [];
-            const dataBirdWorkload = [];
-            const goalWorkload = Array(12).fill(50); // เส้นเป้าหมาย 50% ตลอดปี
-
+        window.updateCharts = function() {
+            const dJ = [], dB = [], dT = [], dJw = [], dBw = [];
             for (let i = 0; i < 12; i++) {
-                const data = appData[i];
+                const d = window.appData[i];
+                const jt = (parseInt(d.june.total)||0) + (parseInt(d.june.life_total)||0);
+                const bt = (parseInt(d.bird.total)||0) + (parseInt(d.bird.life_total)||0);
+                const tt = (parseInt(d.tang.total)||0) + (parseInt(d.tang.life_total)||0);
                 
-                // คำนวณ Volume (ยอดรวม)
-                const jt = (parseInt(data.june.total) || 0) + (parseInt(data.june.life_total) || 0);
-                const bt = (parseInt(data.bird.total) || 0) + (parseInt(data.bird.life_total) || 0);
-                const tt = (parseInt(data.tang.total) || 0) + (parseInt(data.tang.life_total) || 0);
-                
-                dataJuneVol.push(jt);
-                dataBirdVol.push(bt);
-                dataTangVol.push(tt);
-
-                // คำนวณ Workload %
-                const mainTotal = jt + bt;
-                const jWorkPct = mainTotal > 0 ? (jt / mainTotal * 100).toFixed(1) : 0;
-                const bWorkPct = mainTotal > 0 ? (bt / mainTotal * 100).toFixed(1) : 0;
-                
-                dataJuneWorkload.push(jWorkPct);
-                dataBirdWorkload.push(bWorkPct);
+                dJ.push(jt); dB.push(bt); dT.push(tt);
+                const main = jt + bt;
+                dJw.push(main > 0 ? (jt/main*100).toFixed(1) : 0);
+                dBw.push(main > 0 ? (bt/main*100).toFixed(1) : 0);
             }
 
-            // กราฟที่ 1: Volume Chart (Stacked Bar)
-            const ctxVol = document.getElementById('volumeChart').getContext('2d');
-            if (volumeChartInstance) volumeChartInstance.destroy(); // ลบของเก่าก่อนวาดใหม่
-            
-            volumeChartInstance = new Chart(ctxVol, {
+            if (window.volumeChartInstance) window.volumeChartInstance.destroy();
+            window.volumeChartInstance = new Chart(document.getElementById('volumeChart'), {
                 type: 'bar',
-                data: {
-                    labels: shortMonthNames,
-                    datasets: [
-                        { label: 'จูน', data: dataJuneVol, backgroundColor: '#3b82f6', borderRadius: 4 }, // สีฟ้า
-                        { label: 'เบิร์ด', data: dataBirdVol, backgroundColor: '#f97316', borderRadius: 4 }, // สีส้มชัดเจน
-                        { label: 'ตัง', data: dataTangVol, backgroundColor: '#cbd5e1', borderRadius: 4 } // สีเทา
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { stacked: true, grid: { display: false } },
-                        y: { stacked: true, beginAtZero: true }
-                    },
-                    plugins: {
-                        tooltip: { 
-                            mode: 'index', 
-                            intersect: false,
-                            callbacks: {
-                                label: function(context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    if (context.parsed.y !== null) {
-                                        label += context.parsed.y + ' โพสต์';
-                                        
-                                        // ลูกเล่นคำนวณ % จากยอดรวมของเดือนนั้น
-                                        let total = 0;
-                                        context.chart.data.datasets.forEach(dataset => {
-                                            total += dataset.data[context.dataIndex];
-                                        });
-                                        if(total > 0) {
-                                            let percentage = Math.round((context.parsed.y / total) * 100);
-                                            label += ' (' + percentage + '%)';
-                                        }
-                                    }
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
+                data: { labels: window.shortMonthNames, datasets: [
+                    { label: 'จูน', data: dJ, backgroundColor: '#3b82f6', borderRadius: 4 },
+                    { label: 'เบิร์ด', data: dB, backgroundColor: '#f97316', borderRadius: 4 },
+                    { label: 'ตัง', data: dT, backgroundColor: '#cbd5e1', borderRadius: 4 }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, scales: { x: { stacked: true }, y: { stacked: true } } }
             });
 
-            // กราฟที่ 2: Workload Chart (Line with Area Fill)
-            const ctxWorkload = document.getElementById('workloadChart').getContext('2d');
-            if (workloadChartInstance) workloadChartInstance.destroy();
-            
-            workloadChartInstance = new Chart(ctxWorkload, {
+            if (window.workloadChartInstance) window.workloadChartInstance.destroy();
+            window.workloadChartInstance = new Chart(document.getElementById('workloadChart'), {
                 type: 'line',
-                data: {
-                    labels: shortMonthNames,
-                    datasets: [
-                        { 
-                            label: 'เป้าหมาย 50%', 
-                            data: goalWorkload, 
-                            borderColor: '#22c55e', 
-                            borderDash: [5, 5], 
-                            borderWidth: 2, 
-                            pointRadius: 0,
-                            fill: false
-                        },
-                        { 
-                            label: 'จูน (%)', 
-                            data: dataJuneWorkload, 
-                            borderColor: '#3b82f6', 
-                            backgroundColor: 'rgba(59, 130, 246, 0.15)', // แรเงาใต้เส้น
-                            tension: 0.3,
-                            borderWidth: 3,
-                            pointRadius: 4,
-                            fill: true
-                        },
-                        { 
-                            label: 'เบิร์ด (%)', 
-                            data: dataBirdWorkload, 
-                            borderColor: '#f97316', // เปลี่ยนเส้นเป็นสีส้ม
-                            backgroundColor: 'rgba(249, 115, 22, 0.15)', // แรเงาใต้เส้น
-                            tension: 0.3,
-                            borderWidth: 3,
-                            pointRadius: 4,
-                            fill: true
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        y: { beginAtZero: true, max: 100, ticks: { callback: function(value) { return value + '%'; } } }
-                    },
-                    plugins: {
-                        tooltip: { callbacks: { label: function(context) { return context.dataset.label + ': ' + context.parsed.y + '%'; } } }
-                    }
-                }
+                data: { labels: window.shortMonthNames, datasets: [
+                    { label: 'เป้าหมาย 50%', data: Array(12).fill(50), borderColor: '#22c55e', borderDash: [5,5], borderWidth: 2, pointRadius: 0, fill: false },
+                    { label: 'จูน (%)', data: dJw, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.15)', tension: 0.3, fill: true },
+                    { label: 'เบิร์ด (%)', data: dBw, borderColor: '#f97316', backgroundColor: 'rgba(249, 115, 22, 0.15)', tension: 0.3, fill: true }
+                ]},
+                options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 100 } } }
             });
-        }
+        };
 
-        // --- ระบบบันทึกและโหลดไฟล์ (Export / Import) ---
-        
-        // ฟังก์ชันบันทึกข้อมูลเป็นไฟล์ .json (Export)
-        function exportData() {
-            const dataStr = JSON.stringify(appData, null, 2);
-            const dataBlob = new Blob([dataStr], { type: 'application/json' });
-            const url = URL.createObjectURL(dataBlob);
+        // --- Export & Import ---
+        window.exportData = function() {
+            const dataStr = JSON.stringify(window.appData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            triggerDownload(blob, `KPI_Data_${getDateString()}.json`);
+        };
+
+        window.exportCSV = function() {
+            // เพิ่ม BOM (Byte Order Mark) เพื่อให้ Excel อ่านภาษาไทยได้สมบูรณ์
+            let csvContent = "\uFEFF"; 
             
+            // สร้าง Header ของตาราง
+            csvContent += "เดือน,จูน(Mainยอดรวม),จูน(Mainเขียว),จูน(Mainส้ม),จูน(Lifeรวม),จูน(Lifeเขียว),จูน(Lifeส้ม),เบิร์ด(Mainยอดรวม),เบิร์ด(Mainเขียว),เบิร์ด(Mainส้ม),เบิร์ด(Lifeรวม),เบิร์ด(Lifeเขียว),เบิร์ด(Lifeส้ม),ตัง(Mainยอดรวม),ตัง(Mainเขียว),ตัง(Mainส้ม),ตัง(Lifeรวม),ตัง(Lifeเขียว),ตัง(Lifeส้ม)\n";
+
+            // ดึงข้อมูลทั้ง 12 เดือนมาใส่แต่ละแถว
+            for(let i = 0; i < 12; i++) {
+                const d = window.appData[i];
+                const row = [
+                    window.monthNames[i],
+                    d.june.total || 0, d.june.green || 0, d.june.orange || 0, d.june.life_total || 0, d.june.life_green || 0, d.june.life_orange || 0,
+                    d.bird.total || 0, d.bird.green || 0, d.bird.orange || 0, d.bird.life_total || 0, d.bird.life_green || 0, d.bird.life_orange || 0,
+                    d.tang.total || 0, d.tang.green || 0, d.tang.orange || 0, d.tang.life_total || 0, d.tang.life_green || 0, d.tang.life_orange || 0
+                ];
+                csvContent += row.join(",") + "\n";
+            }
+
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            triggerDownload(blob, `KPI_Data_Excel_${getDateString()}.csv`);
+        };
+
+        function triggerDownload(blob, filename) {
+            const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            
-            // ตั้งชื่อไฟล์ใส่วันที่ปัจจุบัน
-            const date = new Date();
-            const dateString = `${date.getFullYear()}${(date.getMonth()+1).toString().padStart(2,'0')}${date.getDate().toString().padStart(2,'0')}`;
-            a.download = `KPI_Team_Data_${dateString}.json`;
-            
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
             URL.revokeObjectURL(url);
-            
-            alert('✅ บันทึกไฟล์ข้อมูล (.json) สำเร็จ!\n\nแนะนำให้เก็บไฟล์นี้ไว้ในเครื่อง เพื่อใช้นำเข้า(โหลดข้อมูล)ในเดือนหน้า จะได้ไม่ต้องพิมพ์ใหม่ทั้งหมดค่ะ');
         }
 
-        // ฟังก์ชันโหลดข้อมูลจากไฟล์ .json (Import)
-        function importData(event) {
+        function getDateString() {
+            const d = new Date();
+            return `${d.getFullYear()}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getDate().toString().padStart(2,'0')}`;
+        }
+
+        window.importData = function(event) {
             const file = event.target.files[0];
             if (!file) return;
-
             const reader = new FileReader();
             reader.onload = function(e) {
                 try {
                     const importedData = JSON.parse(e.target.result);
-                    
-                    // ตรวจสอบความถูกต้องของไฟล์เบื้องต้น
                     if (importedData[0] && importedData[0].june !== undefined) {
-                        appData = { ...appData, ...importedData };
-                        
-                        // บันทึกลง LocalStorage ด้วย เพื่อให้จำค่าไว้
-                        localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
-                        
-                        // อัปเดตหน้าจอ
-                        changeMonth(currentMonth);
+                        window.appData = { ...window.appData, ...importedData };
+                        localStorage.setItem('kpiTeamData2026', JSON.stringify(window.appData));
+                        window.saveToCloud(); // ดันขึ้นคลาวด์ให้ด้วยถ้าเชื่อมต่ออยู่
+                        window.changeMonth(window.currentMonth);
                         alert('✅ นำเข้าข้อมูลสำเร็จเรียบร้อยแล้ว!');
-                    } else {
-                        alert('❌ ไฟล์ไม่ถูกต้อง! กรุณาเลือกไฟล์ที่บันทึกจากระบบนี้เท่านั้นค่ะ');
                     }
-                } catch (error) {
-                    alert('❌ เกิดข้อผิดพลาดในการอ่านไฟล์: ไฟล์อาจเสียหายหรือไม่ใช่ไฟล์ .json ค่ะ');
-                }
-                
-                // เคลียร์ค่า input file เพื่อให้สามารถโหลดไฟล์เดิมซ้ำได้ถ้าจำเป็น
+                } catch (error) { alert('❌ ไฟล์ไม่ถูกต้อง'); }
                 event.target.value = '';
             };
             reader.readAsText(file);
-        }
+        };
 
+        // เริ่มต้นการทำงาน (Start)
+        document.querySelectorAll('.data-input').forEach(input => input.addEventListener('input', window.handleInput));
+        window.changeMonth(0);
+        initCloudSync();
+        
     </script>
 </body>
 </html>
