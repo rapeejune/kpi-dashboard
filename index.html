@@ -83,7 +83,7 @@ h2 { font-size: 16px !important; margin-top: 10px !important; margin-bottom: 10p
 </div>
 <div>
 <h1 class="text-2xl md:text-3xl font-extrabold text-slate-800 tracking-tight">รายงาน KPI ทีมเนื้อหา</h1>
-<p class="text-slate-500 font-medium mt-1">สรุปผลสัดส่วน SEO และภาระงานประจำปี 2025</p>
+<p class="text-slate-500 font-medium mt-1">สรุปผลสัดส่วน SEO และภาระงานประจำปี 2026</p>
 </div>
 </div>
 
@@ -356,7 +356,7 @@ h2 { font-size: 16px !important; margin-top: 10px !important; margin-bottom: 10p
 
 <!-- ตารางสรุปผลตลอดปี (รายเดือน/Q/ทั้งปี) -->
 <h2 class="text-2xl font-bold mb-4 text-slate-800 flex items-center gap-2 mt-12 pt-4">
-<i class="fas fa-table text-blue-600"></i> ตารางสรุปผลตลอดปี 2025 (รายเดือน / ไตรมาส / ทั้งปี)
+<i class="fas fa-table text-blue-600"></i> ตารางสรุปผลตลอดปี 2026 (รายเดือน / ไตรมาส / ทั้งปี)
 </h2>
 <div class="bg-white rounded-xl shadow-lg border border-slate-200 overflow-hidden mb-8">
 <div class="overflow-x-auto">
@@ -404,7 +404,7 @@ tang: { total: '', green: '', orange: '', life_total: '', life_green: '', life_o
 }
 
 // โหลดข้อมูลจาก LocalStorage ถ้าเคยบันทึกไว้
-const savedData = localStorage.getItem('kpiTeamData2025');
+const savedData = localStorage.getItem('kpiTeamData2026');
 if (savedData) {
 try {
 // ผสานข้อมูลเดิมที่มีอยู่เข้ากับโครงสร้างข้อมูล (ข้อมูลเก่าจะ map ลงช่อง Main อัตโนมัติ)
@@ -472,7 +472,7 @@ const field = parts[1]; // field เช่น total, life_total
 
 // อัปเดตข้อมูลในโครงสร้าง และบันทึกลง LocalStorage ทันที
 appData[currentMonth][user][field] = e.target.value;
-localStorage.setItem('kpiTeamData2025', JSON.stringify(appData));
+localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
 
 // คำนวณใหม่
 calculateAll();
@@ -606,7 +606,7 @@ qTotals = { jt: 0, jg: 0, jo: 0, bt: 0, bg: 0, bo: 0, tt: 0 };
 }
 
 // สร้างบรรทัดสรุปยอดรวมทั้งปี
-tbody.appendChild(createSummaryRow('ยอดรวมปี 2025', yearTotals.jt, yearTotals.jg, yearTotals.jo, yearTotals.bt, yearTotals.bg, yearTotals.bo, yearTotals.tt, true, 'bg-slate-800 text-white font-bold text-base shadow-inner'));
+tbody.appendChild(createSummaryRow('ยอดรวมปี 2026', yearTotals.jt, yearTotals.jg, yearTotals.jo, yearTotals.bt, yearTotals.bg, yearTotals.bo, yearTotals.tt, true, 'bg-slate-800 text-white font-bold text-base shadow-inner'));
 }
 
 // ฟังก์ชันช่วยสร้าง HTML สำหรับตารางสรุป
@@ -695,7 +695,7 @@ if (importedData[0] && importedData[0].june !== undefined) {
 appData = { ...appData, ...importedData };
 
 // บันทึกลง LocalStorage ด้วย เพื่อให้จำค่าไว้
-localStorage.setItem('kpiTeamData2025', JSON.stringify(appData));
+localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
 
 // อัปเดตหน้าจอ
 changeMonth(currentMonth);
