@@ -138,10 +138,10 @@
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน % (จูน:เบิร์ด)</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
+                            <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">เกิน 51% (Overload)</td></tr>
                             <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">สมดุล (49% - 51%)</td></tr>
                             <tr><td class="p-2 font-bold text-blue-400 text-center">2</td><td class="p-2 text-right">45% - 48.9%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-400 text-center">1</td><td class="p-2 text-right">น้อยไป (ต่ำกว่า 45%)</td></tr>
-                            <tr><td class="p-2 font-bold text-red-500 text-center">1</td><td class="p-2 text-right text-red-600">เกิน 51% (Overload)</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -497,8 +497,8 @@
 
         const calculateAll = () => {
             const getScore = (p, t) => t==='g' ? (p<15?1:p<20?2:p<25?3:p<30?4:5) : (p<70?1:p<80?2:p<85?3:p<90?4:5);
-            // Workload Score Rule: >51% = 1(Overload), 49-51% = 3(Balanced), 45-48.9% = 2(Low), <45% = 1(Too Low)
-            const getWScore = (p) => p === 0 ? 0 : (p > 51 ? 1 : (p >= 49 ? 3 : (p >= 45 ? 2 : 1)));
+            // Workload Score Rule: >=49% = 3(Max), 45-48.9% = 2, <45% = 1
+            const getWScore = (p) => p === 0 ? 0 : (p >= 49 ? 3 : (p >= 45 ? 2 : 1));
 
             const procUser = (u, ou) => {
                 let t=0, g=0, o=0, ot=0, tt=0;
