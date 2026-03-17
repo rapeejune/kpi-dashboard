@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KPI SEO Team Dashboard 2026 (v13)</title>
+    <title>KPI SEO Team Dashboard 2026 (Final Master)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -25,6 +25,7 @@
             table { width: 100% !important; border-collapse: collapse !important; }
             table th, table td { padding: 2px 3px !important; font-size: 8.5px !important; border: 0.1px solid #cbd5e1 !important; }
             .chart-container { height: 180px !important; }
+            .bg-indigo-950 { background-color: #1e1b4b !important; color: white !important; -webkit-print-color-adjust: exact; }
         }
 
         /* ตารางแบบ Sticky Column */
@@ -70,7 +71,7 @@
                 <div>
                     <h1 class="text-xl md:text-2xl font-bold text-slate-800 tracking-tight">KPI SEO Team Dashboard 2026</h1>
                     <div id="sync-status" class="text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-500 border border-slate-200">
-                        <i class="fas fa-circle text-[8px] animate-pulse"></i> กำลังเชื่อมต่อ...
+                        <i class="fas fa-circle text-[8px] animate-pulse"></i> กำลังเชื่อมต่อฐานข้อมูล...
                     </div>
                 </div>
             </div>
@@ -103,11 +104,11 @@
                     <i class="fas fa-book text-indigo-600 btn-collapse"></i>
                     <h2 class="font-bold text-indigo-800 text-base">เกณฑ์การวัดผล KPI (Reference Rules)</h2>
                 </div>
-                <div class="text-xs text-indigo-500 italic">คลิกเพื่อดูเกณฑ์คะแนน</div>
+                <div class="text-xs text-indigo-500 italic">คลิกเพื่อดูเกณฑ์การให้คะแนน (เต็ม 13 คะแนน)</div>
             </div>
             <div class="section-content grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-green-500">
-                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. SEO เขียว (Green)</h4>
+                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. SEO เขียว (เต็ม 5)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
@@ -120,7 +121,7 @@
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
-                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้มขึ้นไป (Orange+)</h4>
+                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้มขึ้นไป (เต็ม 5)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
@@ -133,17 +134,17 @@
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
-                    <h4 class="text-sm font-bold text-blue-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 3. ปริมาณงาน (Work Volume)</h4>
+                    <h4 class="text-sm font-bold text-blue-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 3. ปริมาณงาน (เต็ม 3)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน % (จูน:เบิร์ด)</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
-                            <tr><td class="p-2 font-bold text-red-500 text-center">-</td><td class="p-2 text-right text-red-600">เกิน 51% (Overload)</td></tr>
                             <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">สมดุล (49% - 51%)</td></tr>
                             <tr><td class="p-2 font-bold text-blue-400 text-center">2</td><td class="p-2 text-right">45% - 48.9%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-400 text-center">1</td><td class="p-2 text-right">น้อยไป (ต่ำกว่า 45%)</td></tr>
+                            <tr><td class="p-2 font-bold text-red-500 text-center">1</td><td class="p-2 text-right text-red-600">เกิน 51% (Overload)</td></tr>
                         </tbody>
                     </table>
-                    <p class="text-[10px] text-slate-400 mt-2 italic">*สัดส่วนคิดเทียบเฉพาะทีมหลัก (แอดมินหลัก)</p>
+                    <p class="text-[10px] text-slate-400 mt-2 italic">*คะแนนรวม KPI = เขียว(5) + ส้ม(5) + ปริมาณงาน(3) = 13 คะแนน</p>
                 </div>
             </div>
         </section>
@@ -173,38 +174,79 @@
                     <h2 class="font-bold text-slate-700 text-base">กรอกข้อมูลเดือน <span class="txt-month-name text-blue-600"></span></h2>
                 </div>
             </div>
+            
             <div class="section-content grid md:grid-cols-3 gap-4">
-                <script>
-                    function renderInputCard(userId, userName, borderColor, note = '') {
-                        document.write(`
-                            <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 ${borderColor}">
-                                <h3 class="font-bold mb-1 text-slate-700 text-sm">${userName}</h3>
-                                ${note ? `<p class="text-[11px] text-slate-400 mb-3 font-medium">${note}</p>` : '<div class="mb-3"></div>'}
-                                <div class="space-y-4 text-center">
-                                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                        <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Main Content</div>
-                                        <div class="grid grid-cols-3 gap-3">
-                                            <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" id="${userId}-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-blue-500" placeholder="0"></div>
-                                            <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" id="${userId}-green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
-                                            <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" id="${userId}-orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
-                                        </div>
-                                    </div>
-                                    <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
-                                        <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Life Content</div>
-                                        <div class="grid grid-cols-3 gap-3">
-                                            <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" id="${userId}-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-pink-500" placeholder="0"></div>
-                                            <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" id="${userId}-life_green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
-                                            <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" id="${userId}-life_orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
-                                        </div>
-                                    </div>
-                                </div>
+                <!-- Card June -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
+                    <h3 class="font-bold mb-1 text-slate-700 text-sm">จูน (June)</h3>
+                    <div class="mb-3"></div>
+                    <div class="space-y-4 text-center">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Main Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="june-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-blue-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="june-green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="june-orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
                             </div>
-                        `);
-                    }
-                </script>
-                <script>renderInputCard('june', 'จูน (June)', 'border-blue-500');</script>
-                <script>renderInputCard('bird', 'เบิร์ด (Bird)', 'border-orange-500');</script>
-                <script>renderInputCard('tang', 'ตัง (Tang)', 'border-slate-400', '(ไม่คิดเป็น KPI)');</script>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Life Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="june-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-pink-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="june-life_green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="june-life_orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Bird -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
+                    <h3 class="font-bold mb-1 text-slate-700 text-sm">เบิร์ด (Bird)</h3>
+                    <div class="mb-3"></div>
+                    <div class="space-y-4 text-center">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Main Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="bird-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-blue-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="bird-green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="bird-orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Life Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="bird-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-pink-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="bird-life_green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="bird-life_orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Tang -->
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-slate-400">
+                    <h3 class="font-bold mb-1 text-slate-700 text-sm">ตัง (Tang)</h3>
+                    <p class="text-[11px] text-slate-400 mb-3 font-medium">(ไม่คิดเป็น KPI)</p>
+                    <div class="space-y-4 text-center">
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Main Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="tang-total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-blue-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="tang-green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="tang-orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
+                            </div>
+                        </div>
+                        <div class="bg-slate-50 p-3 rounded-xl border border-slate-100">
+                            <div class="text-[10px] font-black text-slate-500 uppercase mb-2 tracking-widest">Life Content</div>
+                            <div class="grid grid-cols-3 gap-3">
+                                <div><label class="text-[9px] text-slate-400 font-bold uppercase">Total</label><input type="number" min="0" id="tang-life_total" class="data-input w-full p-2 border rounded-lg text-sm font-bold shadow-sm outline-none focus:border-pink-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-green-500 font-bold uppercase">Green</label><input type="number" min="0" id="tang-life_green" class="data-input w-full p-2 border border-green-100 rounded-lg text-sm font-bold bg-green-50/50 shadow-sm outline-none focus:border-green-500" placeholder="0"></div>
+                                <div><label class="text-[9px] text-orange-500 font-bold uppercase">Orange</label><input type="number" min="0" id="tang-life_orange" class="data-input w-full p-2 border border-orange-100 rounded-lg text-sm font-bold bg-orange-50/50 shadow-sm outline-none focus:border-orange-500" placeholder="0"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -219,51 +261,77 @@
             
             <div class="section-content grid md:grid-cols-2 gap-6">
                 <!-- Result June -->
-                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-blue-600 card-compact flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg mb-5"><i class="fas fa-user-circle text-blue-600 text-2xl"></i> ผลงาน: จูน (June)</h3>
+                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-blue-600 card-compact flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-blue-50 opacity-50"><i class="fas fa-award text-9xl"></i></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-5">
+                            <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-blue-600 text-2xl"></i> ผลงาน: จูน (June)</h3>
+                            <div class="text-right">
+                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Score</div>
+                                <div class="text-2xl font-black text-blue-700 bg-blue-100 px-4 py-1 rounded-xl shadow-inner border border-blue-200 mt-1" id="june-score-total">- / 13</div>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-2 gap-5 mb-5 text-center">
-                            <div class="bg-green-50 p-5 rounded-2xl border border-green-100">
+                            <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
                                 <div class="text-[11px] text-green-700 font-bold uppercase tracking-widest mb-2">SEO เขียว</div>
                                 <div class="text-4xl font-black text-green-600" id="june-res-green-pct">0%</div>
-                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-600 text-white text-xs font-bold shadow-sm" id="june-score-g">Score: 0</div>
+                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-50 text-green-700 text-xs font-bold border border-green-200" id="june-score-g">Score: 0/5</div>
                             </div>
-                            <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100">
+                            <div class="bg-white p-5 rounded-2xl border-2 border-orange-100 shadow-sm">
                                 <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">ส้มขึ้นไป</div>
                                 <div class="text-4xl font-black text-orange-500" id="june-res-orange-pct">0%</div>
-                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-500 text-white text-xs font-bold shadow-sm" id="june-score-o">Score: 0</div>
+                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200" id="june-score-o">Score: 0/5</div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-5 border-t">
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="font-bold text-slate-400 uppercase tracking-widest">สัดส่วนปริมาณงาน (Workload):</span>
-                            <span class="text-2xl font-black text-blue-600" id="june-res-workload-pct">0%</span>
+                    <div class="pt-5 border-t border-slate-100 relative z-10">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
+                                <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-3xl font-black text-blue-600 block leading-none" id="june-res-workload-pct">0%</span>
+                                <span class="text-[10px] font-bold text-blue-500 uppercase mt-1 block" id="june-score-w">Score: 0/3</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Result Bird -->
-                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-orange-500 card-compact flex flex-col justify-between">
-                    <div>
-                        <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg mb-5"><i class="fas fa-user-circle text-orange-500 text-2xl"></i> ผลงาน: เบิร์ด (Bird)</h3>
+                <div class="bg-white rounded-3xl shadow-md p-6 border-t-8 border-orange-500 card-compact flex flex-col justify-between relative overflow-hidden">
+                    <div class="absolute -right-6 -top-6 text-orange-50 opacity-50"><i class="fas fa-award text-9xl"></i></div>
+                    <div class="relative z-10">
+                        <div class="flex justify-between items-start mb-5">
+                            <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-orange-500 text-2xl"></i> ผลงาน: เบิร์ด (Bird)</h3>
+                            <div class="text-right">
+                                <div class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Total Score</div>
+                                <div class="text-2xl font-black text-orange-700 bg-orange-100 px-4 py-1 rounded-xl shadow-inner border border-orange-200 mt-1" id="bird-score-total">- / 13</div>
+                            </div>
+                        </div>
                         <div class="grid grid-cols-2 gap-5 mb-5 text-center">
-                            <div class="bg-green-50 p-5 rounded-2xl border border-green-100">
+                            <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
                                 <div class="text-[11px] text-green-700 font-bold uppercase tracking-widest mb-2">SEO เขียว</div>
                                 <div class="text-4xl font-black text-green-600" id="bird-res-green-pct">0%</div>
-                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-600 text-white text-xs font-bold shadow-sm" id="bird-score-g">Score: 0</div>
+                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-50 text-green-700 text-xs font-bold border border-green-200" id="bird-score-g">Score: 0/5</div>
                             </div>
-                            <div class="bg-orange-50 p-5 rounded-2xl border border-orange-100">
+                            <div class="bg-white p-5 rounded-2xl border-2 border-orange-100 shadow-sm">
                                 <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">ส้มขึ้นไป</div>
                                 <div class="text-4xl font-black text-orange-500" id="bird-res-orange-pct">0%</div>
-                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-500 text-white text-xs font-bold shadow-sm" id="bird-score-o">Score: 0</div>
+                                <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200" id="bird-score-o">Score: 0/5</div>
                             </div>
                         </div>
                     </div>
-                    <div class="pt-5 border-t">
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="font-bold text-slate-400 uppercase tracking-widest">สัดส่วนปริมาณงาน (Workload):</span>
-                            <span class="text-2xl font-black text-orange-600" id="bird-res-workload-pct">0%</span>
+                    <div class="pt-5 border-t border-slate-100 relative z-10">
+                        <div class="flex justify-between items-center">
+                            <div>
+                                <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
+                                <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-3xl font-black text-orange-600 block leading-none" id="bird-res-workload-pct">0%</span>
+                                <span class="text-[10px] font-bold text-orange-500 uppercase mt-1 block" id="bird-score-w">Score: 0/3</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -280,25 +348,25 @@
                 
                 <div class="flex flex-wrap items-center gap-4 bg-white p-3 rounded-2xl shadow-sm border border-slate-200 no-print">
                     <span class="text-[11px] font-black text-slate-400 uppercase tracking-widest"><i class="fas fa-filter mr-1"></i> ปรับคอลัมน์:</span>
-                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold"><input type="checkbox" checked onchange="toggleTableCol('col-posts', this.checked)"> โพสต์</label>
-                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold"><input type="checkbox" checked onchange="toggleTableCol('col-kpi', this.checked)"> KPI %</label>
-                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold"><input type="checkbox" checked onchange="toggleTableCol('col-tang-details', this.checked)"> ตัง</label>
+                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold hover:text-blue-600"><input type="checkbox" checked onchange="toggleTableCol('col-posts', this.checked)"> ยอดโพสต์</label>
+                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold hover:text-blue-600"><input type="checkbox" checked onchange="toggleTableCol('col-kpi', this.checked)"> KPI %</label>
+                    <label class="flex items-center gap-2 text-xs cursor-pointer font-bold hover:text-blue-600"><input type="checkbox" checked onchange="toggleTableCol('col-tang-details', this.checked)"> ตัง</label>
                 </div>
             </div>
 
             <div class="section-content bg-white rounded-2xl shadow-xl border border-slate-300 overflow-hidden">
                 <div class="table-container">
                     <table id="master-table" class="w-full text-left border-collapse min-w-[1250px]">
-                        <thead class="bg-slate-900 text-white uppercase text-[9px] font-bold text-nowrap">
+                        <thead class="bg-slate-900 text-white uppercase text-[10px] font-bold text-nowrap">
                             <tr>
-                                <th class="p-3 sticky-col bg-slate-900 border-r border-slate-700">ช่วงเวลา</th>
-                                <th class="p-2 text-center border-r border-slate-700 bg-blue-700/60" colspan="5">จูน (June)</th>
-                                <th class="p-2 text-center border-r border-slate-700 bg-orange-600/60" colspan="5">เบิร์ด (Bird)</th>
+                                <th class="p-3 sticky-col bg-slate-950 border-r border-slate-700 z-20">ช่วงเวลา</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-blue-700" colspan="5">จูน (June)</th>
+                                <th class="p-2 text-center border-r border-slate-700 bg-orange-600" colspan="5">เบิร์ด (Bird)</th>
                                 <th class="p-2 text-center border-r border-slate-700 bg-slate-700 col-tang-details" colspan="4">ตัง (ไม่คิด KPI)</th>
                                 <th class="p-2 text-center bg-indigo-950">ทีมรวม</th>
                             </tr>
-                            <tr class="bg-slate-800 text-[8px]">
-                                <th class="p-2 sticky-col bg-slate-800 border-r border-slate-600 font-normal italic text-center">Interval</th>
+                            <tr class="bg-slate-800 text-[9px]">
+                                <th class="p-2 sticky-col bg-slate-900 border-r border-slate-600 font-normal italic text-center z-20">Interval</th>
                                 <!-- June -->
                                 <th class="p-1.5 text-center border-r border-slate-600 col-posts">โพสต์</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 text-green-400 col-kpi">เขียว%</th>
@@ -317,10 +385,10 @@
                                 <th class="p-1.5 text-center border-r border-slate-600 col-tang-details text-orange-400 font-bold">ส้ม%</th>
                                 <th class="p-1.5 text-center border-r border-slate-600 col-tang-details text-slate-300 font-bold">กอง%</th>
                                 <!-- Total -->
-                                <th class="p-1.5 text-center text-slate-300">ปริมาณรวม</th>
+                                <th class="p-1.5 text-center text-slate-300 bg-indigo-950">ปริมาณรวม</th>
                             </tr>
                         </thead>
-                        <tbody id="summary-table-body" class="text-[11px] font-medium"></tbody>
+                        <tbody id="summary-table-body" class="text-xs font-medium"></tbody>
                     </table>
                 </div>
             </div>
@@ -335,12 +403,12 @@
                 </div>
             </div>
             <div class="section-content grid md:grid-cols-2 gap-6">
-                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                    <h4 class="text-xs font-bold text-center mb-4 text-slate-400 uppercase tracking-widest italic">Monthly Volume (Main + Life)</h4>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">Monthly Volume (Main + Life)</h4>
                     <div class="chart-container relative h-[250px]"><canvas id="volumeChart"></canvas></div>
                 </div>
-                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm">
-                    <h4 class="text-xs font-bold text-center mb-4 text-slate-400 uppercase tracking-widest italic">Workload Proportion %</h4>
+                <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">Workload Proportion %</h4>
                     <div class="chart-container relative h-[250px]"><canvas id="workloadChart"></canvas></div>
                 </div>
             </div>
@@ -369,7 +437,7 @@
         let currentMonth = 'all';
         let db, auth, isCloudActive = false, collapsedQs = [];
 
-        const APP_ID = 'kpi-web-2026-v10-stable';
+        const APP_ID = 'kpi-web-2026-v12-master';
 
         for(let i=0; i<12; i++) {
             appData[i] = {
@@ -416,7 +484,13 @@
         const handleInput = (e) => {
             if(currentMonth === 'all') return;
             const [u, f] = e.target.id.split('-');
-            appData[parseInt(currentMonth)][u][f] = e.target.value;
+            // ป้องกันค่าติดลบ
+            let val = parseInt(e.target.value);
+            if (val < 0) val = 0;
+            
+            appData[parseInt(currentMonth)][u][f] = isNaN(val) ? '' : val;
+            e.target.value = isNaN(val) ? '' : val;
+            
             calculateAll();
             localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
             clearTimeout(window.saveTimer);
@@ -432,6 +506,8 @@
 
         const calculateAll = () => {
             const getScore = (p, t) => t==='g' ? (p<15?1:p<20?2:p<25?3:p<30?4:5) : (p<70?1:p<80?2:p<85?3:p<90?4:5);
+            // Workload Score Rule: >51% = 1(Overload), 49-51% = 3(Balanced), 45-48.9% = 2(Low), <45% = 1(Too Low)
+            const getWScore = (p) => p === 0 ? 0 : (p > 51 ? 1 : (p >= 49 ? 3 : (p >= 45 ? 2 : 1)));
 
             const procUser = (u, ou) => {
                 let t=0, g=0, o=0, ot=0, tt=0;
@@ -461,11 +537,19 @@
                 const wp = (t+ot) > 0 ? (t/(t+ot)*100) : 0;
                 const tp = teamSum > 0 ? (t/teamSum*100) : 0;
 
+                const scoreG = t > 0 ? getScore(gp, 'g') : 0;
+                const scoreO = t > 0 ? getScore(op, 'o') : 0;
+                const scoreW = t > 0 ? getWScore(wp) : 0;
+                const totalScore = scoreG + scoreO + scoreW;
+
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
                 document.getElementById(`${u}-res-workload-pct`).innerText = wp.toFixed(1) + '%';
-                document.getElementById(`${u}-score-g`).innerText = `Score: ${t>0?getScore(gp,'g'):0}`;
-                document.getElementById(`${u}-score-o`).innerText = `Score: ${t>0?getScore(op,'o'):0}`;
+                
+                document.getElementById(`${u}-score-g`).innerText = `Score: ${scoreG}/5`;
+                document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
+                document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
+                document.getElementById(`${u}-score-total`).innerText = `${t > 0 ? totalScore : '-'} / 13`;
             };
 
             procUser('june', 'bird'); procUser('bird', 'june');
@@ -497,10 +581,10 @@
                 q.jt+=jt; q.jg+=jg; q.jo+=jo; q.bt+=bt; q.bg+=bg; q.bo+=bo; q.tt+=tt; q.tg+=tg; q.to+=to;
                 y.jt+=jt; y.jg+=jg; y.jo+=jo; y.bt+=bt; y.bg+=bg; y.bo+=bo; y.tt+=tt; y.tg+=tg; y.to+=to;
 
-                tbody.appendChild(createRow(shortMonths[i], jt, jg, jo, bt, bg, bo, tt, tg, to, false, isH ? 'q-row-hidden' : ''));
+                tbody.appendChild(createRow(shortMonths[i], jt, jg, jo, bt, bg, bo, tt, tg, to, false, isH ? 'q-row-hidden' : 'hover:bg-slate-50 transition-colors cursor-default'));
 
                 if((i+1)%3 === 0) {
-                    const rowQ = createRow(`Summary Q${qN}`, q.jt, q.jg, q.jo, q.bt, q.bg, q.bo, q.tt, q.tg, q.to, true, 'q-header-active cursor-pointer');
+                    const rowQ = createRow(`Summary Q${qN}`, q.jt, q.jg, q.jo, q.bt, q.bg, q.bo, q.tt, q.tg, q.to, true, 'q-header-active cursor-pointer hover:bg-slate-100 transition-colors');
                     rowQ.onclick = () => window.toggleQuarter(qN);
                     tbody.appendChild(rowQ);
                     q = { jt:0, jg:0, jo:0, bt:0, bg:0, bo:0, tt:0, tg:0, to:0 };
@@ -511,33 +595,37 @@
 
         const createRow = (lbl, jt, jg, jo, bt, bg, bo, tt, tg, to, isS, ex = '') => {
             const tr = document.createElement('tr');
-            tr.className = `border-b border-slate-200 ${isS ? 'bg-summary font-black' : 'hover:bg-blue-50/10'} ${ex}`;
+            tr.className = `border-b border-slate-200 ${isS ? 'bg-summary font-black' : ''} ${ex}`;
             const pct = (p,t) => t > 0 ? (p/t*100).toFixed(1)+'%' : '-';
             const teamSum = jt + bt + tt;
             const jMT = jt + bt;
-            const sCol = isS ? (ex.includes('bg-slate-900') ? 'bg-slate-900 text-white' : 'bg-summary') : '';
+            
+            // Dynamic classes for styling
+            const sCol = isS ? (ex.includes('bg-slate-900') ? 'bg-slate-900 text-white z-20' : 'bg-summary z-20') : 'z-20';
+            const jBg = isS ? '' : 'bg-blue-50/10';
+            const bBg = isS ? '' : 'bg-orange-50/10';
             
             tr.innerHTML = `
-                <td class="p-2 sticky-col border-r border-slate-200 ${sCol}">${isS && !lbl.includes('Total') ? '<i class="fas fa-plus-square mr-2 text-[8px] text-blue-500"></i>' : ''}${lbl}</td>
+                <td class="p-2 md:p-3 sticky-col border-r border-slate-200 ${sCol}">${isS && !lbl.includes('Total') ? '<i class="fas fa-plus-square mr-2 text-[8px] text-blue-500"></i>' : ''}${lbl}</td>
                 <!-- June -->
-                <td class="p-1.5 text-center border-r border-slate-100 col-posts">${jt||0}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold">${pct(jg,jt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold">${pct(jg+jo,jt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-blue-600">${pct(jt,jMT)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-team-share text-blue-400 italic">${pct(jt,teamSum)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-posts ${jBg}">${jt||0}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${jBg}">${pct(jg,jt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${jBg}">${pct(jg+jo,jt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-blue-600 ${jBg}">${pct(jt,jMT)}</td>
+                <td class="p-1.5 text-center border-r border-slate-200 col-team-share text-blue-400 italic ${jBg}">${pct(jt,teamSum)}</td>
                 <!-- Bird -->
-                <td class="p-1.5 text-center border-r border-slate-100 col-posts">${bt||0}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold">${pct(bg,bt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold">${pct(bg+bo,bt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-orange-600">${pct(bt,jMT)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-team-share text-orange-400 italic">${pct(bt,teamSum)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-posts ${bBg}">${bt||0}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${bBg}">${pct(bg,bt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${bBg}">${pct(bg+bo,bt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-orange-600 ${bBg}">${pct(bt,jMT)}</td>
+                <td class="p-1.5 text-center border-r border-slate-200 col-team-share text-orange-400 italic ${bBg}">${pct(bt,teamSum)}</td>
                 <!-- Tang -->
                 <td class="p-1.5 text-center border-r border-slate-100 font-bold text-slate-500 col-tang-details">${tt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 text-green-600 font-medium col-tang-details">${pct(tg,tt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 text-orange-500 font-medium col-tang-details">${pct(tg+to,tt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 text-indigo-500 font-bold col-tang-details">${pct(tt,teamSum)}</td>
+                <td class="p-1.5 text-center border-r border-slate-200 text-indigo-500 font-bold col-tang-details">${pct(tt,teamSum)}</td>
                 <!-- Team Total -->
-                <td class="p-1.5 text-center font-black text-slate-800 bg-indigo-50/20">${teamSum}</td>
+                <td class="p-1.5 text-center font-black ${isS ? '' : 'text-slate-800 bg-indigo-50/20'}">${teamSum}</td>
             `;
             return tr;
         };
@@ -551,7 +639,7 @@
                 { label:'ตัง', data:[], backgroundColor:'#94a3b8' }
             ]};
             const dataW = { labels: shortMonths, datasets: [
-                { label:'เป้า 50%', data:Array(12).fill(50), borderColor:'#10b981', borderDash:[5,5], fill:false, pointRadius:0 },
+                { label:'เป้า 50%', data:Array(12).fill(50), borderColor:'#10b981', borderDash:[5,5], fill:false, pointRadius:0, borderWidth:2 },
                 { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)' },
                 { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)' }
             ]};
@@ -565,9 +653,9 @@
                 dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
             });
             if(vChartIns) vChartIns.destroy();
-            vChartIns = new Chart(ctxV, { type:'bar', data:dataV, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}}, scales:{x:{stacked:true},y:{stacked:true}} }});
+            vChartIns = new Chart(ctxV, { type:'bar', data:dataV, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{x:{stacked:true},y:{stacked:true}} }});
             if(wChartIns) wChartIns.destroy();
-            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:10,font:{size:10}}}}, scales:{y:{min:0,max:100}} }});
+            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:100}} }});
         };
 
         const init = async () => {
