@@ -310,7 +310,7 @@
                                 <span class="text-3xl font-black text-blue-600 block leading-none transition-colors duration-300" id="june-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-blue-500 uppercase mt-1 block" id="june-score-w">Score: 0/3</span>
                                 <!-- Warning Overload -->
-                                <div id="june-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                <div id="june-workload-warning" class="invisible mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
                                     <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
                                 </div>
                             </div>
@@ -348,7 +348,7 @@
                                 <span class="text-3xl font-black text-orange-600 block leading-none transition-colors duration-300" id="bird-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-orange-500 uppercase mt-1 block" id="bird-score-w">Score: 0/3</span>
                                 <!-- Warning Overload -->
-                                <div id="bird-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                <div id="bird-workload-warning" class="invisible mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
                                     <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
                                 </div>
                             </div>
@@ -728,7 +728,7 @@
                 const scoreO = t > 0 ? getScore(op, 'o') : 0;
                 const scoreW = t > 0 ? getWScore(wp) : 0;
 
-                // อัปเดต UI ข้อความเปอร์เซ็นต์ (เอาโค้ดส่วนนี้กลับมาแล้ว)
+                // อัปเดต UI ข้อความเปอร์เซ็นต์
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
                 
@@ -743,11 +743,11 @@
                 const warningEl = document.getElementById(`${u}-workload-warning`);
                 if (warningEl) {
                     if (wp > 51) {
-                        warningEl.classList.remove('hidden');
+                        warningEl.classList.remove('invisible'); // ใช้ invisible แทน hidden
                         wpEl.classList.remove('text-blue-600', 'text-orange-600');
                         wpEl.classList.add('text-red-600'); // เปลียนสีเปอร์เซ็นต์เป็นแดง
                     } else {
-                        warningEl.classList.add('hidden');
+                        warningEl.classList.add('invisible'); // ใช้ invisible แทน hidden
                         wpEl.classList.remove('text-red-600');
                         wpEl.classList.add(u === 'june' ? 'text-blue-600' : 'text-orange-600'); // กลับมาเป็นสีปกติ
                     }
