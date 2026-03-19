@@ -728,7 +728,10 @@
                 const scoreO = t > 0 ? getScore(op, 'o') : 0;
                 const scoreW = t > 0 ? getWScore(wp) : 0;
 
-                // อัปเดต UI ข้อความเปอร์เซ็นต์
+                // อัปเดต UI ข้อความเปอร์เซ็นต์ (เอาโค้ดส่วนนี้กลับมาแล้ว)
+                document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
+                document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
+                
                 const wpEl = document.getElementById(`${u}-res-workload-pct`);
                 wpEl.innerText = wp.toFixed(1) + '%';
                 
