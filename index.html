@@ -301,14 +301,18 @@
                         </div>
                     </div>
                     <div class="pt-5 border-t border-slate-100 relative z-10">
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start">
+                            <div class="pt-1">
                                 <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
                                 <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
                             </div>
-                            <div class="text-right">
-                                <span class="text-3xl font-black text-blue-600 block leading-none" id="june-res-workload-pct">0%</span>
+                            <div class="text-right flex flex-col items-end">
+                                <span class="text-3xl font-black text-blue-600 block leading-none transition-colors duration-300" id="june-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-blue-500 uppercase mt-1 block" id="june-score-w">Score: 0/3</span>
+                                <!-- Warning Overload -->
+                                <div id="june-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                    <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -335,14 +339,18 @@
                         </div>
                     </div>
                     <div class="pt-5 border-t border-slate-100 relative z-10">
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start">
+                            <div class="pt-1">
                                 <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
                                 <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
                             </div>
-                            <div class="text-right">
-                                <span class="text-3xl font-black text-orange-600 block leading-none" id="bird-res-workload-pct">0%</span>
+                            <div class="text-right flex flex-col items-end">
+                                <span class="text-3xl font-black text-orange-600 block leading-none transition-colors duration-300" id="bird-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-orange-500 uppercase mt-1 block" id="bird-score-w">Score: 0/3</span>
+                                <!-- Warning Overload -->
+                                <div id="bird-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                    <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -720,13 +728,27 @@
                 const scoreO = t > 0 ? getScore(op, 'o') : 0;
                 const scoreW = t > 0 ? getWScore(wp) : 0;
 
-                document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
-                document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
-                document.getElementById(`${u}-res-workload-pct`).innerText = wp.toFixed(1) + '%';
+                // อัปเดต UI ข้อความเปอร์เซ็นต์
+                const wpEl = document.getElementById(`${u}-res-workload-pct`);
+                wpEl.innerText = wp.toFixed(1) + '%';
                 
                 document.getElementById(`${u}-score-g`).innerText = `Score: ${scoreG}/5`;
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
                 document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
+
+                // จัดการแจ้งเตือน Overload (> 51%)
+                const warningEl = document.getElementById(`${u}-workload-warning`);
+                if (warningEl) {
+                    if (wp > 51) {
+                        warningEl.classList.remove('hidden');
+                        wpEl.classList.remove('text-blue-600', 'text-orange-600');
+                        wpEl.classList.add('text-red-600'); // เปลียนสีเปอร์เซ็นต์เป็นแดง
+                    } else {
+                        warningEl.classList.add('hidden');
+                        wpEl.classList.remove('text-red-600');
+                        wpEl.classList.add(u === 'june' ? 'text-blue-600' : 'text-orange-600'); // กลับมาเป็นสีปกติ
+                    }
+                }
             };
 
             procUser('june', 'bird'); procUser('bird', 'june');
