@@ -60,6 +60,9 @@
         .swal2-confirm { background-color: #4f46e5 !important; font-family: 'Prompt', sans-serif !important; border-radius: 0.5rem !important; }
         .swal2-cancel { font-family: 'Prompt', sans-serif !important; border-radius: 0.5rem !important; }
         .swal2-title, .swal2-html-container { font-family: 'Prompt', sans-serif !important; }
+
+        /* PIN Input Security Style */
+        .locked-input { cursor: pointer; background-color: #f8fafc !important; }
     </style>
 </head>
 <body class="text-slate-800 p-2 md:p-4 lg:p-6 main-container">
@@ -80,11 +83,12 @@
             </div>
             
             <div class="flex flex-wrap items-center gap-2 shrink-0 no-print text-sm font-medium">
-                <div class="relative group">
+                <!-- เมนูจัดการข้อมูล -->
+                <div class="relative group z-40">
                     <button class="bg-slate-800 hover:bg-black text-white px-4 py-2 rounded-xl shadow-sm flex items-center gap-2 transition-all">
                         <i class="fas fa-database"></i> จัดการข้อมูล <i class="fas fa-chevron-down text-xs"></i>
                     </button>
-                    <div class="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 overflow-hidden">
+                    <div class="absolute right-0 mt-2 w-60 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all overflow-hidden">
                         <div class="px-4 py-2 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">การนำออก (Export)</div>
                         <button onclick="exportExcel()" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 border-b border-slate-100 text-sm"><i class="fas fa-file-excel text-green-600"></i> Excel (.xlsx)</button>
                         <button onclick="exportCSV()" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 border-b border-slate-100 text-sm"><i class="fas fa-file-csv text-blue-500"></i> CSV File</button>
@@ -93,6 +97,18 @@
                         <button onclick="document.getElementById('import-file').click()" class="w-full text-left px-4 py-2.5 hover:bg-slate-100 flex items-center gap-3 text-indigo-600 font-bold text-sm"><i class="fas fa-file-import"></i> Load JSON File</button>
                     </div>
                 </div>
+
+                <!-- เมนูตั้งค่า (Security) -->
+                <div class="relative group z-40">
+                    <button class="bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 px-4 py-2 rounded-xl shadow-sm flex items-center gap-2 transition-all">
+                        <i class="fas fa-cog text-slate-500"></i> ตั้งค่า <i class="fas fa-chevron-down text-xs"></i>
+                    </button>
+                    <div class="absolute right-0 mt-2 w-48 bg-white border border-slate-200 rounded-xl shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all overflow-hidden">
+                        <div class="px-4 py-2 bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-widest">ความปลอดภัย</div>
+                        <button onclick="openChangePinModal()" class="w-full text-left px-4 py-2.5 hover:bg-slate-50 flex items-center gap-3 text-red-600 font-bold text-sm"><i class="fas fa-key"></i> เปลี่ยนรหัส PIN</button>
+                    </div>
+                </div>
+
                 <input type="file" id="import-file" class="hidden" accept=".json" onchange="importData(event)">
                 <button onclick="window.print()" class="bg-rose-600 hover:bg-rose-700 text-white px-4 py-2 rounded-xl font-bold shadow-md flex items-center gap-2 transition-all">
                     <i class="fas fa-file-pdf"></i> พิมพ์ / เซฟ PDF
@@ -111,29 +127,29 @@
             </div>
             <div class="section-content grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-green-500">
-                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. SEO เขียว (เต็ม 5)</h4>
+                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. SEO เขียว (สัดส่วน 35%)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
-                            <tr><td class="p-2 font-bold text-green-600 text-center">5</td><td class="p-2 text-right">56% ขึ้นไป</td></tr>
+                            <tr><td class="p-2 font-bold text-green-600 text-center">5</td><td class="p-2 text-right">≥ 56%</td></tr>
                             <tr><td class="p-2 font-bold text-green-500 text-center">4</td><td class="p-2 text-right">46% - 55.9%</td></tr>
                             <tr class="bg-green-50 font-bold text-green-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">35% - 45.9%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-400 text-center">2</td><td class="p-2 text-right">25% - 34.9%</td></tr>
                             <tr><td class="p-2 font-bold text-red-400 text-center">1</td><td class="p-2 text-right">15% - 24.9%</td></tr>
-                            <tr><td class="p-2 font-bold text-slate-400 text-center">0</td><td class="p-2 text-right">ต่ำกว่า 15%</td></tr>
+                            <tr><td class="p-2 font-bold text-slate-400 text-center">0</td><td class="p-2 text-right">&lt; 15%</td></tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
-                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้มขึ้นไป (เต็ม 5)</h4>
+                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้มขึ้นไป (สัดส่วน 25%)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
-                            <tr><td class="p-2 font-bold text-orange-600 text-center">5</td><td class="p-2 text-right">86% ขึ้นไป</td></tr>
+                            <tr><td class="p-2 font-bold text-orange-600 text-center">5</td><td class="p-2 text-right">≥ 86%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-500 text-center">4</td><td class="p-2 text-right">80% - 85.9%</td></tr>
                             <tr class="bg-orange-50 font-bold text-orange-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">70% - 79.9%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-400 text-center">2</td><td class="p-2 text-right">60% - 69.9%</td></tr>
-                            <tr><td class="p-2 font-bold text-red-400 text-center">1</td><td class="p-2 text-right">59.9% ลงไป</td></tr>
+                            <tr><td class="p-2 font-bold text-red-400 text-center">1</td><td class="p-2 text-right">≤ 59.9%</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -142,9 +158,10 @@
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน % (จูน:เบิร์ด)</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
-                            <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">45% ขึ้นไป</td></tr>
+                            <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">&gt; 55% (Max)</td></tr>
+                            <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3</td><td class="p-2 text-right">45% - 55%</td></tr>
                             <tr><td class="p-2 font-bold text-blue-400 text-center">2</td><td class="p-2 text-right">35% - 44.9%</td></tr>
-                            <tr><td class="p-2 font-bold text-orange-400 text-center">1</td><td class="p-2 text-right">ต่ำกว่า 35%</td></tr>
+                            <tr><td class="p-2 font-bold text-orange-400 text-center">1</td><td class="p-2 text-right">&lt; 35%</td></tr>
                         </tbody>
                     </table>
                     <p class="text-[10px] text-slate-400 mt-2 italic">*สัดส่วนคิดเทียบเฉพาะทีมหลัก (ไม่คิดตัง)</p>
@@ -175,6 +192,8 @@
                 <div class="flex items-center gap-3">
                     <i class="fas fa-pencil-alt text-blue-600 btn-collapse text-base"></i>
                     <h2 class="font-bold text-slate-700 text-base">กรอกข้อมูลเดือน <span class="txt-month-name text-blue-600"></span></h2>
+                    <!-- Status icon for lock -->
+                    <div id="lock-status-indicator" class="text-xs font-bold text-slate-400 bg-slate-100 px-3 py-1 rounded-full whitespace-nowrap ml-2"><i class="fas fa-lock mr-1"></i> ล็อกข้อมูล</div>
                 </div>
                 
                 <button id="btn-auto-fetch" onclick="event.stopPropagation(); autoFetchData();" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center justify-center gap-2 transition-all border border-indigo-700 w-full md:w-auto">
@@ -184,7 +203,7 @@
             
             <div class="section-content grid md:grid-cols-3 gap-4">
                 <!-- Card June -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500 relative">
                     <h3 class="font-bold mb-1 text-slate-700 text-sm">จูน (June)</h3>
                     <div class="mb-3"></div>
                     <div class="space-y-4 text-center">
@@ -208,7 +227,7 @@
                 </div>
 
                 <!-- Card Bird -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500 relative">
                     <h3 class="font-bold mb-1 text-slate-700 text-sm">เบิร์ด (Bird)</h3>
                     <div class="mb-3"></div>
                     <div class="space-y-4 text-center">
@@ -232,7 +251,7 @@
                 </div>
 
                 <!-- Card Tang -->
-                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-slate-400">
+                <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-slate-400 relative">
                     <h3 class="font-bold mb-1 text-slate-700 text-sm">ตัง (Tang)</h3>
                     <p class="text-[11px] text-slate-400 mb-3 font-medium">(ไม่คิดเป็น KPI)</p>
                     <div class="space-y-4 text-center">
@@ -288,13 +307,13 @@
                         </div>
                     </div>
                     <div class="pt-5 border-t border-slate-100 relative z-10">
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start">
+                            <div class="pt-1">
                                 <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
                                 <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
                             </div>
-                            <div class="text-right">
-                                <span class="text-3xl font-black text-blue-600 block leading-none" id="june-res-workload-pct">0%</span>
+                            <div class="text-right flex flex-col items-end">
+                                <span class="text-3xl font-black text-blue-600 block leading-none transition-colors duration-300" id="june-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-blue-500 uppercase mt-1 block" id="june-score-w">Score: 0/3</span>
                             </div>
                         </div>
@@ -322,13 +341,13 @@
                         </div>
                     </div>
                     <div class="pt-5 border-t border-slate-100 relative z-10">
-                        <div class="flex justify-between items-center">
-                            <div>
+                        <div class="flex justify-between items-start">
+                            <div class="pt-1">
                                 <span class="font-bold text-slate-500 text-sm uppercase tracking-widest block">สัดส่วนปริมาณงาน</span>
                                 <span class="text-[10px] text-slate-400">เทียบจูน:เบิร์ด</span>
                             </div>
-                            <div class="text-right">
-                                <span class="text-3xl font-black text-orange-600 block leading-none" id="bird-res-workload-pct">0%</span>
+                            <div class="text-right flex flex-col items-end">
+                                <span class="text-3xl font-black text-orange-600 block leading-none transition-colors duration-300" id="bird-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-orange-500 uppercase mt-1 block" id="bird-score-w">Score: 0/3</span>
                             </div>
                         </div>
@@ -411,6 +430,60 @@
         </section>
     </div>
 
+    <!-- Modals ความปลอดภัย -->
+    <!-- Modal: ปลดล็อก (Unlock) -->
+    <div id="pin-modal" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex flex-col items-center justify-center backdrop-blur-sm transition-all duration-300">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 text-center transform transition-transform scale-100">
+            <div class="bg-blue-100 text-blue-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="fas fa-lock text-3xl"></i>
+            </div>
+            <h3 class="text-xl font-bold text-slate-800 mb-2">ปลดล็อกข้อมูล</h3>
+            <p class="text-sm text-slate-500 mb-6">กรุณาใส่รหัสผ่าน 4 หลัก เพื่อแก้ไขข้อมูล</p>
+            
+            <div class="mb-4">
+                <input type="password" id="unlock-pin" maxlength="4" inputmode="numeric" pattern="\d*" class="w-full text-center text-3xl tracking-[1em] font-black p-4 border-2 border-slate-200 rounded-2xl focus:border-blue-500 focus:ring-4 focus:ring-blue-100 outline-none transition-all" placeholder="••••" onkeypress="if(event.key === 'Enter') verifyPin()">
+            </div>
+            <p id="pin-error" class="text-red-500 text-xs font-bold mb-4 hidden animate-pulse"><i class="fas fa-exclamation-triangle"></i> รหัส PIN ไม่ถูกต้อง!</p>
+            
+            <div class="flex gap-3">
+                <button onclick="closePinModal()" class="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors">ยกเลิก</button>
+                <button onclick="verifyPin()" class="flex-1 py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-xl shadow-md transition-colors">ยืนยัน</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: เปลี่ยนรหัส (Change PIN) -->
+    <div id="change-pin-modal" class="fixed inset-0 bg-slate-900/60 z-50 hidden flex items-center justify-center backdrop-blur-sm transition-all duration-300">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-sm w-full mx-4 transform transition-transform scale-100">
+            <h3 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2">
+                <i class="fas fa-key text-red-500"></i> เปลี่ยนรหัส PIN
+            </h3>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">รหัสปัจจุบัน (Current PIN)</label>
+                    <input type="password" id="old-pin" maxlength="4" inputmode="numeric" class="w-full p-3 border-2 border-slate-200 rounded-xl focus:border-blue-500 outline-none text-center tracking-[0.5em] font-bold" placeholder="••••">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">รหัสใหม่ (New PIN)</label>
+                    <input type="password" id="new-pin" maxlength="4" inputmode="numeric" class="w-full p-3 border-2 border-blue-200 bg-blue-50 rounded-xl focus:border-blue-500 outline-none text-center tracking-[0.5em] font-bold" placeholder="••••">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">ยืนยันรหัสใหม่ (Confirm PIN)</label>
+                    <input type="password" id="confirm-pin" maxlength="4" inputmode="numeric" class="w-full p-3 border-2 border-blue-200 bg-blue-50 rounded-xl focus:border-blue-500 outline-none text-center tracking-[0.5em] font-bold" placeholder="••••">
+                </div>
+            </div>
+            
+            <p id="change-pin-msg" class="text-xs font-bold text-center mb-4 hidden"></p>
+            
+            <div class="flex gap-3">
+                <button onclick="closeChangePinModal()" class="flex-1 py-3 px-4 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold rounded-xl transition-colors">ยกเลิก</button>
+                <button onclick="saveNewPin()" class="flex-1 py-3 px-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-md transition-colors">บันทึกรหัสใหม่</button>
+            </div>
+        </div>
+    </div>
+
+
     <!-- Application Engine -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -432,6 +505,12 @@
         
         const APP_ID = 'kpi-web-2026-production'; 
 
+        // Security Configuration
+        let isUnlocked = false;
+        let pendingInputEl = null;
+        let activePin = localStorage.getItem('kpiTeamPin2026') || '1234';
+
+        // 1. สร้างโครงสร้างข้อมูลเริ่มต้น
         let appData = [];
         for(let i=0; i<12; i++) {
             appData[i] = {
@@ -441,12 +520,17 @@
             };
         }
 
+        // 2. ดึงข้อมูลจาก Local Storage (ป้องกันข้อมูลหายตอนโหลดหน้าใหม่)
         const localData = localStorage.getItem('kpiTeamData2026');
         if (localData) {
             try {
                 const parsed = JSON.parse(localData);
-                if (Array.isArray(parsed) && parsed.length >= 12) appData = parsed;
-            } catch (e) { console.error(e); }
+                if (Array.isArray(parsed) && parsed.length >= 12) {
+                    appData = parsed;
+                }
+            } catch (e) {
+                console.error("Local Storage parse error", e);
+            }
         }
 
         let currentMonth = 'all';
@@ -486,6 +570,90 @@
             calculateAll();
         };
 
+        // --- Security Functions ---
+        window.openPinModal = () => { 
+            document.getElementById('pin-modal').classList.remove('hidden'); 
+            document.getElementById('unlock-pin').value = ''; 
+            setTimeout(() => document.getElementById('unlock-pin').focus(), 50); // Delay for modal rendering
+            document.getElementById('pin-error').classList.add('hidden'); 
+        };
+        
+        window.closePinModal = () => { 
+            document.getElementById('pin-modal').classList.add('hidden'); 
+            pendingInputEl = null; 
+        };
+        
+        window.verifyPin = () => {
+            const entered = document.getElementById('unlock-pin').value;
+            if (entered === activePin) {
+                isUnlocked = true;
+                // ปลดล็อกทุกช่อง
+                document.querySelectorAll('.data-input').forEach(el => {
+                    el.readOnly = false;
+                    el.classList.remove('locked-input');
+                });
+                
+                // เปลี่ยนสถานะล็อก
+                const statusInd = document.getElementById('lock-status-indicator');
+                statusInd.innerHTML = '<i class="fas fa-lock-open mr-1"></i> ปลดล็อกแล้ว';
+                statusInd.className = 'text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full whitespace-nowrap ml-2';
+                
+                closePinModal();
+                if(pendingInputEl) pendingInputEl.focus(); // เด้งไปโฟกัสช่องที่คลิกไว้ตอนแรก
+            } else {
+                document.getElementById('pin-error').classList.remove('hidden');
+                document.getElementById('unlock-pin').value = '';
+                document.getElementById('unlock-pin').focus();
+            }
+        };
+
+        window.openChangePinModal = () => {
+            document.getElementById('change-pin-modal').classList.remove('hidden');
+            document.getElementById('old-pin').value = '';
+            document.getElementById('new-pin').value = '';
+            document.getElementById('confirm-pin').value = '';
+            document.getElementById('change-pin-msg').classList.add('hidden');
+        };
+
+        window.closeChangePinModal = () => {
+            document.getElementById('change-pin-modal').classList.add('hidden');
+        };
+
+        window.saveNewPin = () => {
+            const oldPin = document.getElementById('old-pin').value;
+            const newPin = document.getElementById('new-pin').value;
+            const confirmPin = document.getElementById('confirm-pin').value;
+            const msgEl = document.getElementById('change-pin-msg');
+
+            msgEl.classList.remove('hidden');
+
+            if (oldPin !== activePin) {
+                msgEl.innerText = "❌ รหัสปัจจุบันไม่ถูกต้อง";
+                msgEl.className = "text-xs font-bold text-center mb-4 text-red-500 animate-pulse";
+                return;
+            }
+            if (newPin.length !== 4) {
+                msgEl.innerText = "❌ รหัสใหม่ต้องมี 4 หลัก";
+                msgEl.className = "text-xs font-bold text-center mb-4 text-orange-500";
+                return;
+            }
+            if (newPin !== confirmPin) {
+                msgEl.innerText = "❌ รหัสยืนยันไม่ตรงกัน";
+                msgEl.className = "text-xs font-bold text-center mb-4 text-red-500";
+                return;
+            }
+
+            // บันทึกรหัสผ่านใหม่
+            activePin = newPin;
+            localStorage.setItem('kpiTeamPin2026', newPin);
+            
+            msgEl.innerText = "✅ เปลี่ยนรหัสผ่านสำเร็จ!";
+            msgEl.className = "text-xs font-bold text-center mb-4 text-green-500";
+            
+            setTimeout(() => { closeChangePinModal(); }, 1000);
+        };
+        // -----------------------
+
         const handleInput = (e) => {
             if(currentMonth === 'all') return;
             const [u, f] = e.target.id.split('-');
@@ -515,13 +683,22 @@
                 s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> บันทึกออนไลน์เรียบร้อย';
                 s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
             } catch(e) {
+                console.error("Save to Cloud error:", e);
                 const s = document.getElementById('sync-status');
-                s.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500"></i> บันทึกไม่สำเร็จ';
+                s.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500"></i> บันทึกไม่สำเร็จ (ติดสิทธิ์ Firebase)';
                 s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 shadow-sm';
             }
         };
 
+        // --- Auto Fetch Feature (Optimized Version + Error Handling) ---
         window.autoFetchData = async () => {
+            // ระบบป้องกันการดึงข้อมูล ต้องปลดล็อก PIN ก่อน!
+            if (!isUnlocked) {
+                pendingInputEl = null;
+                openPinModal();
+                return;
+            }
+
             if (currentMonth === 'all') {
                 Swal.fire({
                     icon: 'warning',
@@ -707,7 +884,6 @@
         };
 
         const calculateAll = () => {
-            // New Scoring Rules Based on Prompt
             const getScore = (p, t) => {
                 if (t === 'g') {
                     if (p >= 56) return 5;
@@ -848,7 +1024,7 @@
                 { label:'ตัง', data:[], backgroundColor:'#94a3b8' }
             ]};
             const dataW = { labels: shortMonths, datasets: [
-                { label:'ขั้นต่ำ 45%', data:Array(12).fill(45), borderColor:'#10b981', borderDash:[5,5], fill:false, pointRadius:0, borderWidth:2 },
+                { label:'เป้า 45-55%', data:Array(12).fill(50), borderColor:'#10b981', borderDash:[5,5], fill:false, pointRadius:0, borderWidth:2 },
                 { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)' },
                 { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)' }
             ]};
@@ -868,6 +1044,21 @@
         };
 
         const init = async () => {
+            // Apply Security Setup Initially
+            document.querySelectorAll('.data-input').forEach(input => {
+                input.readOnly = true;
+                input.classList.add('locked-input');
+                
+                // When clicking a locked input
+                input.addEventListener('focus', (e) => {
+                    if (!isUnlocked) {
+                        e.target.blur(); // ซ่อน Keyboard มือถือ
+                        pendingInputEl = e.target; // จำช่องที่คลิก
+                        openPinModal();
+                    }
+                });
+            });
+
             try {
                 const app = initializeApp(MY_FIREBASE_CONFIG);
                 auth = getAuth(app); db = getFirestore(app);
@@ -895,6 +1086,9 @@
                             s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
                         }, (err) => {
                             console.error("Firestore error:", err);
+                            const s = document.getElementById('sync-status');
+                            s.innerHTML = '<i class="fas fa-lock text-red-500"></i> ติดสิทธิ์ Firebase Rules';
+                            s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 shadow-sm';
                         });
                     }
                 });
