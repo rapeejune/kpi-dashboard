@@ -431,7 +431,7 @@
                     <div class="chart-container relative h-[250px]"><canvas id="volumeChart"></canvas></div>
                 </div>
                 <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">YTD Workload Proportion % (สัดส่วนสะสม)</h4>
+                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">Workload Proportion %</h4>
                     <div class="chart-container relative h-[250px]"><canvas id="workloadChart"></canvas></div>
                 </div>
             </div>
@@ -1052,14 +1052,12 @@
                 { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)' },
                 { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)' }
             ]};
-            
-            let cumulativeJT = 0;
-            let cumulativeBT = 0;
 
             appData.forEach(d => {
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
+                const sum = jt + bt;
                 
                 // ซ่อนกราฟในเดือนที่ยังไม่มีข้อมูล (ไม่ให้ร่วงลงไปที่ 0)
                 if (jt === 0 && bt === 0 && tt === 0) {
@@ -1069,15 +1067,11 @@
                     dataW.datasets[1].data.push(null);
                     dataW.datasets[2].data.push(null);
                 } else {
-                    cumulativeJT += jt;
-                    cumulativeBT += bt;
-                    const sumCumulative = cumulativeJT + cumulativeBT;
-
                     dataV.datasets[0].data.push(jt); 
                     dataV.datasets[1].data.push(bt); 
                     dataV.datasets[2].data.push(tt);
-                    dataW.datasets[1].data.push(sumCumulative > 0 ? (cumulativeJT/sumCumulative*100).toFixed(1) : 0);
-                    dataW.datasets[2].data.push(sumCumulative > 0 ? (cumulativeBT/sumCumulative*100).toFixed(1) : 0);
+                    dataW.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
+                    dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
                 }
             });
             if(vChartIns) vChartIns.destroy();
