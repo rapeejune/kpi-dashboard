@@ -141,7 +141,7 @@
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
-                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้มขึ้นไป (สัดส่วน 25%)</h4>
+                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้ม (สัดส่วน 25%)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">สัดส่วน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
@@ -293,16 +293,23 @@
                         <div class="flex justify-between items-start mb-5">
                             <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-blue-600 text-2xl"></i> ผลงาน: จูน (June)</h3>
                         </div>
-                        <div class="grid grid-cols-2 gap-5 mb-5 text-center">
+                        <div class="grid grid-cols-2 gap-5 mb-3 text-center">
                             <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
                                 <div class="text-[11px] text-green-700 font-bold uppercase tracking-widest mb-2">SEO เขียว</div>
                                 <div class="text-4xl font-black text-green-600" id="june-res-green-pct">0%</div>
                                 <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-50 text-green-700 text-xs font-bold border border-green-200" id="june-score-g">Score: 0/5</div>
                             </div>
                             <div class="bg-white p-5 rounded-2xl border-2 border-orange-100 shadow-sm">
-                                <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">ส้มขึ้นไป</div>
+                                <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">SEO ส้ม</div>
                                 <div class="text-4xl font-black text-orange-500" id="june-res-orange-pct">0%</div>
                                 <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200" id="june-score-o">Score: 0/5</div>
+                            </div>
+                        </div>
+                        <div class="mb-5 text-center">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-100 text-[10px] text-red-600 font-medium">
+                                <i class="fas fa-circle text-[8px]"></i> 
+                                <span>ส่วนที่เหลือ (SEO แดง / ไม่มีคะแนน): </span>
+                                <span id="june-res-red-pct" class="font-bold text-red-700">0%</span>
                             </div>
                         </div>
                     </div>
@@ -331,16 +338,23 @@
                         <div class="flex justify-between items-start mb-5">
                             <h3 class="font-bold text-slate-700 flex items-center gap-2 text-lg"><i class="fas fa-user-circle text-orange-500 text-2xl"></i> ผลงาน: เบิร์ด (Bird)</h3>
                         </div>
-                        <div class="grid grid-cols-2 gap-5 mb-5 text-center">
+                        <div class="grid grid-cols-2 gap-5 mb-3 text-center">
                             <div class="bg-white p-5 rounded-2xl border-2 border-green-100 shadow-sm">
                                 <div class="text-[11px] text-green-700 font-bold uppercase tracking-widest mb-2">SEO เขียว</div>
                                 <div class="text-4xl font-black text-green-600" id="bird-res-green-pct">0%</div>
                                 <div class="mt-3 inline-block px-4 py-1 rounded-full bg-green-50 text-green-700 text-xs font-bold border border-green-200" id="bird-score-g">Score: 0/5</div>
                             </div>
                             <div class="bg-white p-5 rounded-2xl border-2 border-orange-100 shadow-sm">
-                                <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">ส้มขึ้นไป</div>
+                                <div class="text-[11px] text-orange-700 font-bold uppercase tracking-widest mb-2">SEO ส้ม</div>
                                 <div class="text-4xl font-black text-orange-500" id="bird-res-orange-pct">0%</div>
                                 <div class="mt-3 inline-block px-4 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-bold border border-orange-200" id="bird-score-o">Score: 0/5</div>
+                            </div>
+                        </div>
+                        <div class="mb-5 text-center">
+                            <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 border border-red-100 text-[10px] text-red-600 font-medium">
+                                <i class="fas fa-circle text-[8px]"></i> 
+                                <span>ส่วนที่เหลือ (SEO แดง / ไม่มีคะแนน): </span>
+                                <span id="bird-res-red-pct" class="font-bold text-red-700">0%</span>
                             </div>
                         </div>
                     </div>
@@ -528,7 +542,7 @@
             };
         }
 
-        // 2. ดึงข้อมูลจาก Local Storage (ป้องกันข้อมูลหายตอนโหลดหน้าใหม่)
+        // 2. ดึงข้อมูลจาก Local Storage
         const localData = localStorage.getItem('kpiTeamData2026');
         if (localData) {
             try {
@@ -698,7 +712,7 @@
             }
         };
 
-        // --- Auto Fetch Feature (Optimized Version + Error Handling) ---
+        // --- Auto Fetch Feature ---
         window.autoFetchData = async () => {
             // ระบบป้องกันการดึงข้อมูล ต้องปลดล็อก PIN ก่อน!
             if (!isUnlocked) {
@@ -901,7 +915,7 @@
                     if (p >= 15) return 1;
                     return 0; // < 15%
                 } else {
-                    // t === 'o'
+                    // t === 'o' (นับเฉพาะส้มตามที่กำหนด)
                     if (p >= 86) return 5;
                     if (p >= 80) return 4;
                     if (p >= 70) return 3;
@@ -936,9 +950,17 @@
                 }
 
                 const teamSum = t + ot + tt;
+                // คำนวณสัดส่วนเปอร์เซ็นต์ (g = สีเขียว, o = สีส้ม ล้วนๆ ไม่รวมกัน)
                 const gp = t > 0 ? (g/t*100) : 0;
-                const op = t > 0 ? ((g+o)/t*100) : 0;
-                const wp = (t+ot) > 0 ? (t/(t+ot)*100) : 0;
+                const op = t > 0 ? (o/t*100) : 0;
+                
+                // คำนวณสัดส่วนสีแดง (ส่วนที่เหลือ)
+                const r = Math.max(0, t - g - o);
+                const rp = t > 0 ? (r/t*100) : 0;
+                
+                // คำนวณสัดส่วนงานจากยอดรวมเฉพาะจูน+เบิร์ด (ไม่รวมตัง)
+                const mainTeamSum = t + ot;
+                const wp = mainTeamSum > 0 ? (t/mainTeamSum*100) : 0;
 
                 const scoreG = t > 0 ? getScore(gp, 'g') : 0;
                 const scoreO = t > 0 ? getScore(op, 'o') : 0;
@@ -947,6 +969,9 @@
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
                 
+                const redEl = document.getElementById(`${u}-res-red-pct`);
+                if (redEl) redEl.innerText = rp.toFixed(1) + '%';
+                
                 const wpEl = document.getElementById(`${u}-res-workload-pct`);
                 wpEl.innerText = wp.toFixed(1) + '%';
                 
@@ -954,7 +979,7 @@
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
                 document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
 
-                // จัดการแจ้งเตือน Overload (> 55%)
+                // แจ้งเตือน Overload (> 55%)
                 const warningEl = document.getElementById(`${u}-workload-warning`);
                 if (warningEl && wpEl) {
                     if (wp > 55) {
@@ -1025,15 +1050,15 @@
                 <td class="p-2 md:p-3 sticky-col border-r border-slate-200 ${sCol}">${isS && !lbl.includes('Total') ? '<i class="fas fa-plus-square mr-2 text-[8px] text-blue-500"></i>' : ''}${lbl}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-posts ${jBg}">${jt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${jBg}">${pct(jg,jt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${jBg}">${pct(jg+jo,jt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${jBg}">${pct(jo,jt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-blue-600 ${jBg}">${pct(jt,jMT)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-posts ${bBg}">${bt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-green-600 font-bold ${bBg}">${pct(bg,bt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${bBg}">${pct(bg+bo,bt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 col-kpi text-orange-600 font-bold ${bBg}">${pct(bo,bt)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 col-kpi font-black text-orange-600 ${bBg}">${pct(bt,jMT)}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 font-bold text-slate-500 col-tang-details">${tt||0}</td>
                 <td class="p-1.5 text-center border-r border-slate-100 text-green-600 font-medium col-tang-details">${pct(tg,tt)}</td>
-                <td class="p-1.5 text-center border-r border-slate-100 text-orange-500 font-medium col-tang-details">${pct(tg+to,tt)}</td>
+                <td class="p-1.5 text-center border-r border-slate-100 text-orange-500 font-medium col-tang-details">${pct(to,tt)}</td>
                 <td class="p-1.5 text-center font-black ${isS ? '' : 'text-slate-800 bg-indigo-50/20'}">${teamSum}</td>
             `;
             return tr;
@@ -1057,6 +1082,8 @@
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
+                
+                // คำนวณสัดส่วนรายเดือน (Monthly) แยกจูนและเบิร์ด
                 const sum = jt + bt;
                 
                 // ซ่อนกราฟในเดือนที่ยังไม่มีข้อมูล (ไม่ให้ร่วงลงไปที่ 0)
@@ -1077,7 +1104,8 @@
             if(vChartIns) vChartIns.destroy();
             vChartIns = new Chart(ctxV, { type:'bar', data:dataV, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{x:{stacked:true},y:{stacked:true}} }});
             if(wChartIns) wChartIns.destroy();
-            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:100}}, spanGaps: false }});
+            // spanGaps: true ช่วยให้เส้นไม่ขาดตอนแม้จะมีค่า null
+            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:100}}, spanGaps: true }});
         };
 
         const init = async () => {
@@ -1148,7 +1176,7 @@
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
                 const tg = (parseInt(d.tang.green)||0)+(parseInt(d.tang.life_green)||0);
                 const to = (parseInt(d.tang.orange)||0)+(parseInt(d.tang.life_orange)||0);
-                r.push([ monthNames[i], jt, (jg/jt*100||0).toFixed(1), ((jg+jo)/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), ((bg+bo)/bt*100||0).toFixed(1), tt, (tg/tt*100||0).toFixed(1), ((tg+to)/tt*100||0).toFixed(1), jt+bt+tt ]);
+                r.push([ monthNames[i], jt, (jg/jt*100||0).toFixed(1), (jo/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), (bo/bt*100||0).toFixed(1), tt, (tg/tt*100||0).toFixed(1), (to/tt*100||0).toFixed(1), jt+bt+tt ]);
             });
             XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(r), "KPI"), "KPI_Report_2026.xlsx");
         };
