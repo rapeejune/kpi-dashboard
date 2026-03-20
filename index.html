@@ -315,6 +315,10 @@
                             <div class="text-right flex flex-col items-end">
                                 <span class="text-3xl font-black text-blue-600 block leading-none transition-colors duration-300" id="june-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-blue-500 uppercase mt-1 block" id="june-score-w">Score: 0/3</span>
+                                <!-- Warning Overload -->
+                                <div id="june-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                    <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -349,6 +353,10 @@
                             <div class="text-right flex flex-col items-end">
                                 <span class="text-3xl font-black text-orange-600 block leading-none transition-colors duration-300" id="bird-res-workload-pct">0%</span>
                                 <span class="text-[10px] font-bold text-orange-500 uppercase mt-1 block" id="bird-score-w">Score: 0/3</span>
+                                <!-- Warning Overload -->
+                                <div id="bird-workload-warning" class="hidden mt-2 text-[10px] font-bold text-red-600 bg-red-50 border border-red-200 px-2.5 py-1 rounded-lg animate-pulse shadow-sm">
+                                    <i class="fas fa-fire"></i> งาน Overload! พักเบรกบ้างนะ
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -423,7 +431,7 @@
                     <div class="chart-container relative h-[250px]"><canvas id="volumeChart"></canvas></div>
                 </div>
                 <div class="bg-white rounded-2xl p-5 border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">Workload Proportion %</h4>
+                    <h4 class="text-sm font-bold text-center mb-4 text-slate-500 uppercase tracking-widest">YTD Workload Proportion % (สัดส่วนสะสม)</h4>
                     <div class="chart-container relative h-[250px]"><canvas id="workloadChart"></canvas></div>
                 </div>
             </div>
@@ -938,11 +946,27 @@
 
                 document.getElementById(`${u}-res-green-pct`).innerText = gp.toFixed(1) + '%';
                 document.getElementById(`${u}-res-orange-pct`).innerText = op.toFixed(1) + '%';
-                document.getElementById(`${u}-res-workload-pct`).innerText = wp.toFixed(1) + '%';
+                
+                const wpEl = document.getElementById(`${u}-res-workload-pct`);
+                wpEl.innerText = wp.toFixed(1) + '%';
                 
                 document.getElementById(`${u}-score-g`).innerText = `Score: ${scoreG}/5`;
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
                 document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
+
+                // จัดการแจ้งเตือน Overload (> 55%)
+                const warningEl = document.getElementById(`${u}-workload-warning`);
+                if (warningEl && wpEl) {
+                    if (wp > 55) {
+                        warningEl.classList.remove('hidden'); 
+                        wpEl.classList.remove('text-blue-600', 'text-orange-600');
+                        wpEl.classList.add('text-red-600'); 
+                    } else {
+                        warningEl.classList.add('hidden'); 
+                        wpEl.classList.remove('text-red-600');
+                        wpEl.classList.add(u === 'june' ? 'text-blue-600' : 'text-orange-600'); 
+                    }
+                }
             };
 
             procUser('june', 'bird'); procUser('bird', 'june');
@@ -1028,11 +1052,14 @@
                 { label:'จูน%', data:[], borderColor:'#3b82f6', tension:0.3, fill:true, backgroundColor:'rgba(59,130,246,0.1)' },
                 { label:'เบิร์ด%', data:[], borderColor:'#f97316', tension:0.3, fill:true, backgroundColor:'rgba(249,115,22,0.1)' }
             ]};
+            
+            let cumulativeJT = 0;
+            let cumulativeBT = 0;
+
             appData.forEach(d => {
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
-                const sum = jt + bt;
                 
                 // ซ่อนกราฟในเดือนที่ยังไม่มีข้อมูล (ไม่ให้ร่วงลงไปที่ 0)
                 if (jt === 0 && bt === 0 && tt === 0) {
@@ -1042,11 +1069,15 @@
                     dataW.datasets[1].data.push(null);
                     dataW.datasets[2].data.push(null);
                 } else {
+                    cumulativeJT += jt;
+                    cumulativeBT += bt;
+                    const sumCumulative = cumulativeJT + cumulativeBT;
+
                     dataV.datasets[0].data.push(jt); 
                     dataV.datasets[1].data.push(bt); 
                     dataV.datasets[2].data.push(tt);
-                    dataW.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
-                    dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
+                    dataW.datasets[1].data.push(sumCumulative > 0 ? (cumulativeJT/sumCumulative*100).toFixed(1) : 0);
+                    dataW.datasets[2].data.push(sumCumulative > 0 ? (cumulativeBT/sumCumulative*100).toFixed(1) : 0);
                 }
             });
             if(vChartIns) vChartIns.destroy();
