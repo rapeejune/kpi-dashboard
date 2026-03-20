@@ -1032,15 +1032,27 @@
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
-                dataV.datasets[0].data.push(jt); dataV.datasets[1].data.push(bt); dataV.datasets[2].data.push(tt);
                 const sum = jt + bt;
-                dataW.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
-                dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
+                
+                // ซ่อนกราฟในเดือนที่ยังไม่มีข้อมูล (ไม่ให้ร่วงลงไปที่ 0)
+                if (jt === 0 && bt === 0 && tt === 0) {
+                    dataV.datasets[0].data.push(null);
+                    dataV.datasets[1].data.push(null);
+                    dataV.datasets[2].data.push(null);
+                    dataW.datasets[1].data.push(null);
+                    dataW.datasets[2].data.push(null);
+                } else {
+                    dataV.datasets[0].data.push(jt); 
+                    dataV.datasets[1].data.push(bt); 
+                    dataV.datasets[2].data.push(tt);
+                    dataW.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
+                    dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
+                }
             });
             if(vChartIns) vChartIns.destroy();
             vChartIns = new Chart(ctxV, { type:'bar', data:dataV, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{x:{stacked:true},y:{stacked:true}} }});
             if(wChartIns) wChartIns.destroy();
-            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:100}} }});
+            wChartIns = new Chart(ctxW, { type:'line', data:dataW, options:{ maintainAspectRatio:false, plugins:{legend:{labels:{boxWidth:12,font:{size:11}}}}, scales:{y:{min:0,max:100}}, spanGaps: false }});
         };
 
         const init = async () => {
