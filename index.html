@@ -63,6 +63,8 @@
 
         /* PIN Input Security Style */
         .locked-input { cursor: pointer; background-color: #f8fafc !important; }
+        
+        textarea.locked-input { resize: none; }
     </style>
 </head>
 <body class="text-slate-800 p-2 md:p-4 lg:p-6 main-container">
@@ -127,7 +129,7 @@
             </div>
             <div class="section-content grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-green-500">
-                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. SEO เขียว</h4>
+                    <h4 class="text-sm font-bold text-green-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 1. Precision Platforming (SEO เขียว 35%)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">เกณฑ์ประเมิน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
@@ -135,13 +137,12 @@
                             <tr><td class="p-2 font-bold text-green-500 text-center">4</td><td class="p-2 text-right">46% - 55%</td></tr>
                             <tr class="bg-green-50 font-bold text-green-700"><td class="p-2 text-center">3 <span class="text-[10px] font-normal text-green-600">(มาตรฐาน)</span></td><td class="p-2 text-right">35% - 45%</td></tr>
                             <tr><td class="p-2 font-bold text-orange-400 text-center">2</td><td class="p-2 text-right">25% - 34%</td></tr>
-                            <tr><td class="p-2 font-bold text-red-400 text-center">1</td><td class="p-2 text-right">15% - 24%</td></tr>
-                            <tr><td class="p-2 font-bold text-slate-400 text-center">0</td><td class="p-2 text-right">&lt; 15%</td></tr>
+                            <tr><td class="p-2 font-bold text-red-400 text-center">1</td><td class="p-2 text-right">≤ 24%</td></tr>
                         </tbody>
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-orange-500">
-                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. SEO ส้ม</h4>
+                    <h4 class="text-sm font-bold text-orange-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 2. Trusted Gatekeeper (SEO ส้ม 25%)</h4>
                     <table class="w-full text-xs border-collapse">
                         <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">เกณฑ์ประเมิน %</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
@@ -154,9 +155,9 @@
                     </table>
                 </div>
                 <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 border-t-4 border-blue-500">
-                    <h4 class="text-sm font-bold text-blue-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 3. ปริมาณงาน (สัดส่วนโพสต์)</h4>
+                    <h4 class="text-sm font-bold text-blue-700 mb-3"><i class="fas fa-circle text-[10px] mr-1"></i> 3. Post Count (ปริมาณงาน 15%)</h4>
                     <table class="w-full text-xs border-collapse">
-                        <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">เกณฑ์ประเมิน %</th></tr></thead>
+                        <thead><tr class="bg-slate-50 border-b"><th class="p-2 text-left">คะแนน</th><th class="p-2 text-right">เกณฑ์ประเมิน % (จูน:เบิร์ด)</th></tr></thead>
                         <tbody class="divide-y divide-slate-100 font-medium text-slate-600">
                             <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3 <span class="text-[10px] font-normal text-blue-600">(Overload)</span></td><td class="p-2 text-right">&gt; 55%</td></tr>
                             <tr class="bg-blue-50 font-bold text-blue-700"><td class="p-2 text-center">3 <span class="text-[10px] font-normal text-blue-600">(มาตรฐาน)</span></td><td class="p-2 text-right">45% - 55%</td></tr>
@@ -197,7 +198,7 @@
                 </div>
                 
                 <button id="btn-auto-fetch" onclick="event.stopPropagation(); autoFetchData();" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl text-sm font-bold shadow-md flex items-center justify-center gap-2 transition-all border border-indigo-700 w-full md:w-auto">
-                    <i class="fas fa-bolt"></i> ดึงข้อมูลจากเว็บไซต์อัตโนมัติ
+                    <i class="fas fa-bolt"></i> ดึงข้อมูลยอดโพสต์จากเว็บ
                 </button>
             </div>
             
@@ -273,6 +274,18 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- กล่องใส่หมายเหตุรายเดือน (Monthly Remarks) -->
+                <div class="md:col-span-3 bg-white rounded-2xl shadow-sm border border-slate-200 p-5 border-t-4 border-purple-500 mt-2 relative">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="font-bold text-slate-700 text-sm flex items-center gap-2"><i class="fas fa-sticky-note text-purple-500"></i> หมายเหตุประจำเดือน (Monthly Remarks)</h3>
+                        <button id="btn-fetch-keywords" onclick="event.stopPropagation(); fetchTrendingTopics();" class="bg-purple-100 hover:bg-purple-200 text-purple-700 border border-purple-200 px-3 py-1.5 rounded-lg text-[10px] font-bold shadow-sm flex items-center gap-1 transition-all">
+                            <i class="fas fa-magic"></i> ดึงประเด็นข่าวฮิต (Auto)
+                        </button>
+                    </div>
+                    <p class="text-[10px] text-slate-400 mb-3">บันทึกเหตุการณ์สำคัญ หรือประเด็นข่าวใหญ่ประจำเดือน (กดปุ่มสแกนด้านขวา เพื่อให้ระบบดึงคำจากทุกแท็กที่ถูกใช้งานอัตโนมัติ)</p>
+                    <textarea id="month-remark" class="data-input w-full p-3 border border-slate-200 rounded-xl text-sm shadow-sm outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-100 min-h-[120px]" placeholder="พิมพ์หมายเหตุส่วนตัวที่นี่..."></textarea>
+                </div>
             </div>
         </section>
 
@@ -280,7 +293,7 @@
         <section id="section-monthly" class="mb-8">
             <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSection('section-monthly')">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-check-circle text-green-600 btn-collapse"></i>
+                    <i class="fas fa-check-circle text-green-600 btn-collapse text-xl"></i>
                     <h2 class="text-xl font-bold text-slate-800 uppercase tracking-tight">สรุปผลงาน: <span class="txt-month-display text-blue-600"></span></h2>
                 </div>
             </div>
@@ -375,6 +388,28 @@
                         </div>
                     </div>
                 </div>
+                
+                <!-- กล่องแสดงข้อความหมายเหตุ (จะซ่อน/แสดง อัตโนมัติเวลาเลือกเดือน) -->
+                <div id="monthly-remark-display" class="md:col-span-2 bg-purple-50 rounded-2xl p-5 border border-purple-100 hidden">
+                    <h4 class="text-xs font-bold text-purple-800 uppercase tracking-widest mb-2"><i class="fas fa-quote-left mr-1"></i> Note / เหตุการณ์สำคัญ</h4>
+                    <p id="txt-monthly-remark" class="text-sm text-purple-900 whitespace-pre-wrap leading-relaxed"></p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Event Log Section -->
+        <section id="section-event-log" class="mb-8 collapsed no-print">
+            <div class="flex items-center justify-between mb-4 bg-white p-4 rounded-xl shadow-sm border border-slate-200 cursor-pointer transition-all hover:bg-slate-50" onclick="toggleSection('section-event-log')">
+                <div class="flex items-center gap-3">
+                    <i class="fas fa-history text-purple-600 btn-collapse text-xl"></i>
+                    <h2 class="text-lg font-bold text-slate-800 tracking-tight">📌 สรุปเหตุการณ์สำคัญ (Annual Event Log)</h2>
+                </div>
+                <div class="text-xs font-bold text-purple-500 bg-purple-100 px-3 py-1 rounded-full border border-purple-200 shadow-sm">คลิกเพื่อดูสรุป</div>
+            </div>
+            <div class="section-content">
+                <div id="event-log-content" class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Event logs will be rendered here by JS -->
+                </div>
             </div>
         </section>
 
@@ -435,7 +470,7 @@
         <section id="section-charts" class="mb-20 no-print">
             <div class="flex items-center justify-between mb-4 cursor-pointer" onclick="toggleSection('section-charts')">
                 <div class="flex items-center gap-3">
-                    <i class="fas fa-chart-line text-indigo-600 btn-collapse"></i>
+                    <i class="fas fa-chart-line text-indigo-600 btn-collapse text-xl"></i>
                     <h2 class="text-xl font-bold text-slate-800 uppercase tracking-tight">Trends Analysis</h2>
                 </div>
             </div>
@@ -553,7 +588,8 @@
             appData[i] = {
                 june: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
                 bird: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
-                tang: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' }
+                tang: { total: '', green: '', orange: '', life_total: '', life_green: '', life_orange: '' },
+                remark: '' 
             };
         }
 
@@ -563,7 +599,7 @@
             try {
                 const parsed = JSON.parse(localData);
                 if (Array.isArray(parsed) && parsed.length >= 12) {
-                    appData = parsed;
+                    appData = parsed.map(d => ({...d, remark: d.remark || ''}));
                 }
             } catch (e) {
                 console.error("Local Storage parse error", e);
@@ -603,6 +639,9 @@
                         if(el) el.value = d[u][f] || '';
                     });
                 });
+                
+                const remarkEl = document.getElementById('month-remark');
+                if (remarkEl) remarkEl.value = d.remark || '';
             }
             calculateAll();
         };
@@ -611,7 +650,7 @@
         window.openPinModal = () => { 
             document.getElementById('pin-modal').classList.remove('hidden'); 
             document.getElementById('unlock-pin').value = ''; 
-            setTimeout(() => document.getElementById('unlock-pin').focus(), 50); // Delay for modal rendering
+            setTimeout(() => document.getElementById('unlock-pin').focus(), 50);
             document.getElementById('pin-error').classList.add('hidden'); 
         };
         
@@ -624,19 +663,17 @@
             const entered = document.getElementById('unlock-pin').value;
             if (entered === activePin) {
                 isUnlocked = true;
-                // ปลดล็อกทุกช่อง
                 document.querySelectorAll('.data-input').forEach(el => {
                     el.readOnly = false;
                     el.classList.remove('locked-input');
                 });
                 
-                // เปลี่ยนสถานะล็อก
                 const statusInd = document.getElementById('lock-status-indicator');
                 statusInd.innerHTML = '<i class="fas fa-lock-open mr-1"></i> ปลดล็อกแล้ว';
                 statusInd.className = 'text-xs font-bold text-green-600 bg-green-100 px-3 py-1 rounded-full whitespace-nowrap ml-2';
                 
                 closePinModal();
-                if(pendingInputEl) pendingInputEl.focus(); // เด้งไปโฟกัสช่องที่คลิกไว้ตอนแรก
+                if(pendingInputEl) pendingInputEl.focus(); 
             } else {
                 document.getElementById('pin-error').classList.remove('hidden');
                 document.getElementById('unlock-pin').value = '';
@@ -680,7 +717,6 @@
                 return;
             }
 
-            // บันทึกรหัสผ่านใหม่
             activePin = newPin;
             localStorage.setItem('kpiTeamPin2026', newPin);
             
@@ -693,12 +729,17 @@
 
         const handleInput = (e) => {
             if(currentMonth === 'all') return;
-            const [u, f] = e.target.id.split('-');
-            let val = parseInt(e.target.value);
-            if (val < 0) val = 0;
             
-            appData[parseInt(currentMonth)][u][f] = isNaN(val) ? '' : val;
-            e.target.value = isNaN(val) ? '' : val;
+            if (e.target.id === 'month-remark') {
+                appData[parseInt(currentMonth)].remark = e.target.value;
+            } else {
+                const [u, f] = e.target.id.split('-');
+                let val = parseInt(e.target.value);
+                if (val < 0) val = 0;
+                
+                appData[parseInt(currentMonth)][u][f] = isNaN(val) ? '' : val;
+                e.target.value = isNaN(val) ? '' : val;
+            }
             
             calculateAll();
             localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
@@ -720,16 +761,14 @@
                 s.innerHTML = '<i class="fas fa-cloud text-green-500"></i> บันทึกออนไลน์เรียบร้อย';
                 s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-green-50 text-green-700 border border-green-200 shadow-sm';
             } catch(e) {
-                console.error("Save to Cloud error:", e);
                 const s = document.getElementById('sync-status');
                 s.innerHTML = '<i class="fas fa-exclamation-triangle text-red-500"></i> บันทึกไม่สำเร็จ (ติดสิทธิ์ Firebase)';
                 s.className = 'text-xs inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-red-50 text-red-700 border border-red-200 shadow-sm';
             }
         };
 
-        // --- Auto Fetch Feature ---
+        // --- Auto Fetch Feature (ดึงยอดโพสต์) ---
         window.autoFetchData = async () => {
-            // ระบบป้องกันการดึงข้อมูล ต้องปลดล็อก PIN ก่อน!
             if (!isUnlocked) {
                 pendingInputEl = null;
                 openPinModal();
@@ -747,13 +786,13 @@
             }
 
             const confirmResult = await Swal.fire({
-                title: `ดึงข้อมูลเดือน ${monthNames[currentMonth]}?`,
-                text: "ข้อมูลเดิมที่เคยกรอกในเดือนนี้จะถูกลบทิ้งและแทนที่ด้วยข้อมูลจากเว็บไซต์ (ใช้เวลาประมาณ 5 วินาที)",
+                title: `ดึงข้อมูลยอดโพสต์เดือน ${monthNames[currentMonth]}?`,
+                text: "ระบบจะอัปเดตยอดโพสต์จากเว็บไซต์อัตโนมัติ",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#4f46e5',
                 cancelButtonColor: '#d1d5db',
-                confirmButtonText: 'ใช่, ดึงข้อมูลเลย!',
+                confirmButtonText: 'ใช่, ดึงยอดโพสต์!',
                 cancelButtonText: 'ยกเลิก'
             });
 
@@ -781,7 +820,8 @@
                 const newData = {
                     june: { total: 0, green: 0, orange: 0, life_total: 0, life_green: 0, life_orange: 0 },
                     bird: { total: 0, green: 0, orange: 0, life_total: 0, life_green: 0, life_orange: 0 },
-                    tang: { total: 0, green: 0, orange: 0, life_total: 0, life_green: 0, life_orange: 0 }
+                    tang: { total: 0, green: 0, orange: 0, life_total: 0, life_green: 0, life_orange: 0 },
+                    remark: appData[currentMonth].remark 
                 };
 
                 let postProgress = "รอคิว";
@@ -814,7 +854,7 @@
                         try {
                             const r = await fetch(`${urlBase}&page=${p}`);
                             if (r.ok) return await r.json();
-                        } catch(e) { console.error(`Error page ${p}`, e); }
+                        } catch(e) {}
                         return [];
                     };
 
@@ -885,6 +925,7 @@
                 let totalFetched = 0;
                 let totalSeoFetched = 0;
                 Object.keys(newData).forEach(k => {
+                    if (k === 'remark') return;
                     totalFetched += newData[k].total + newData[k].life_total;
                     totalSeoFetched += newData[k].green + newData[k].orange + newData[k].life_green + newData[k].life_orange;
                 });
@@ -893,14 +934,14 @@
                     Swal.fire({
                         icon: 'info',
                         title: 'ดึงยอดโพสต์สำเร็จ\n(แต่ไม่พบข้อมูล SEO)',
-                        html: '<div class="text-left text-sm mt-3 leading-relaxed">ระบบสามารถนับยอดรวมโพสต์ได้ครบถ้วน แต่<b>ไม่สามารถดึงยอดสีเขียว/ส้มได้</b> เนื่องจากระบบเว็บไซต์ของ The Standard ซ่อนข้อมูลคะแนน SEO ไว้ไม่ให้ดึงผ่าน API สาธารณะ<br><br><b class="text-indigo-600">วิธีแก้ปัญหา:</b><br>1. แจ้งทีม Developer ให้เขียนโค้ดเปิดข้อมูล SEO ลงใน REST API<br>2. <b>กรอกยอด SEO เขียว/ส้ม ด้วยตนเอง</b>ไปก่อนในเดือนนี้ค่ะ (โปรแกรมนับยอด Total ให้แล้ว ช่วยประหยัดเวลาได้ส่วนหนึ่ง)</div>',
+                        html: '<div class="text-left text-sm mt-3 leading-relaxed">ระบบนับยอดโพสต์ได้แล้ว แต่<b>ไม่สามารถดึงยอดสีเขียว/ส้มได้</b> เนื่องจากติดข้อจำกัด API ของ The Standard<br><br><b class="text-indigo-600">วิธีแก้ปัญหา:</b> <b>กรอกยอด SEO ด้วยตนเอง</b>ไปก่อนในเดือนนี้ค่ะ</div>',
                         confirmButtonColor: '#4f46e5'
                     });
                 } else {
                     Swal.fire({
                         icon: 'success',
                         title: 'ดึงข้อมูลสำเร็จ!',
-                        text: 'ระบบอัปเดตยอดโพสต์และคะแนน SEO ให้เรียบร้อยแล้วค่ะ',
+                        text: 'ระบบอัปเดตยอดโพสต์ให้เรียบร้อยแล้วค่ะ',
                         confirmButtonColor: '#4f46e5'
                     });
                 }
@@ -910,7 +951,7 @@
                 Swal.fire({
                     icon: 'error',
                     title: 'เกิดข้อผิดพลาด',
-                    text: 'ไม่สามารถดึงข้อมูลจากเว็บไซต์ได้ อาจเกิดจากการติดบล็อก (CORS) หรือเซิร์ฟเวอร์ของเว็บไซต์ช้าเกินไปค่ะ',
+                    text: 'ไม่สามารถดึงข้อมูลจากเว็บไซต์ได้ อาจเกิดจากการติดบล็อก (CORS) หรือเซิร์ฟเวอร์ช้าเกินไป',
                     confirmButtonColor: '#ef4444'
                 });
             } finally {
@@ -920,7 +961,298 @@
             }
         };
 
-        const calculateAll = () => {
+        // --- Fetch Trending Topics (สแกนหา Keywords อัตโนมัติ) ---
+        window.fetchTrendingTopics = async () => {
+            if (!isUnlocked) {
+                pendingInputEl = document.getElementById('month-remark');
+                openPinModal();
+                return;
+            }
+
+            if (currentMonth === 'all') {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'แจ้งเตือน',
+                    text: 'กรุณาเลือกเดือนที่ต้องการก่อนค่ะ',
+                    confirmButtonColor: '#4f46e5'
+                });
+                return;
+            }
+
+            const confirmResult = await Swal.fire({
+                title: `สแกนหาข่าวใหญ่เดือน ${monthNames[currentMonth]}?`,
+                text: "ระบบจะดึง 'คำ (Terms)' ของข่าวทั้งหมดมาวิเคราะห์ กรองความซ้ำซ้อนด้วยเทคนิค Substring Matching เพื่อยุบรวมประเด็นเดียวกันให้สมบูรณ์แบบที่สุด (ใช้เวลา 5-10 วินาที)",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: '#9333ea',
+                cancelButtonColor: '#d1d5db',
+                confirmButtonText: 'สแกนอัตโนมัติ',
+                cancelButtonText: 'ยกเลิก'
+            });
+
+            if (!confirmResult.isConfirmed) return;
+
+            const btn = document.getElementById('btn-fetch-keywords');
+            const originalText = btn ? btn.innerHTML : '';
+            if(btn) {
+                btn.disabled = true;
+                btn.classList.add('opacity-50', 'cursor-not-allowed');
+                btn.innerHTML = `<i class="fas fa-spinner fa-spin"></i> กำลังสแกน...`;
+            }
+
+            try {
+                const year = 2026; 
+                const monthStr = (parseInt(currentMonth) + 1).toString().padStart(2, '0');
+                const lastDay = new Date(year, parseInt(currentMonth) + 1, 0).getDate();
+                
+                const after = `${year}-${monthStr}-01T00:00:00`;
+                const before = `${year}-${monthStr}-${lastDay}T23:59:59`;
+
+                let topicCounts = {};
+                let topicCoOccurrences = {};
+
+                // รายชื่อคำที่กว้างเกินไป จะถูกกรองทิ้ง (เพิ่มลดได้)
+                const blockList = [
+                    'ข่าว', 'การเมือง', 'การเมืองไทย', 'เศรษฐกิจ', 'ธุรกิจ', 'สังคม', 'ต่างประเทศ', 'ในประเทศ', 
+                    'ไลฟ์สไตล์', 'บันเทิง', 'กีฬา', 'สิ่งแวดล้อม', 'เทคโนโลยี', 'วิทยาศาสตร์', 'สุขภาพ',
+                    'the standard', 'the standard pop', 'the standard wealth', 'wealth', 'today', 'pop',
+                    'news', 'thailand', 'world', 'business', 'lifestyle', 'culture', 'sport', 'politics',
+                    'video', 'podcast', 'infographic', 'picture', 'photo', 'บทความ', 'บทความพิเศษ', 'สัมภาษณ์',
+                    'ประเทศไทย', 'ไทย', 'ประเทศ', 'ทั่วไทย', 'วิดีโอ', 'พอดแคสต์', 'ประเด็นข่าว', 'เกาะติด', 'อัปเดต'
+                ];
+
+                const fetchWPForTerms = async (type) => {
+                    const urlBase = `https://thestandard.co/wp-json/wp/v2/${type}?after=${after}&before=${before}&per_page=100&_embed=true`;
+                    
+                    let res1;
+                    try {
+                        res1 = await fetch(`${urlBase}&page=1`);
+                    } catch(e) { throw new Error('Network error'); }
+                    
+                    if (!res1.ok) throw new Error(`HTTP Error ${res1.status}`);
+
+                    const totalPages = parseInt(res1.headers.get('X-WP-TotalPages')) || 1;
+                    let allPosts = await res1.json();
+
+                    const fetchPage = async (p) => {
+                        try {
+                            const r = await fetch(`${urlBase}&page=${p}`);
+                            if (r.ok) return await r.json();
+                        } catch(e) {}
+                        return [];
+                    };
+
+                    const batchSize = 5;
+                    for (let i = 2; i <= totalPages; i += batchSize) {
+                        const batchPromises = [];
+                        for (let j = 0; j < batchSize && (i + j) <= totalPages; j++) {
+                            batchPromises.push(fetchPage(i + j));
+                        }
+                        const batchResults = await Promise.all(batchPromises);
+                        batchResults.forEach(posts => {
+                            if (Array.isArray(posts)) allPosts = allPosts.concat(posts);
+                        });
+                    }
+
+                    // ถอด HTML Tags เผื่อติดมา
+                    const decodeHTMLEntities = (text) => {
+                        const textArea = document.createElement('textarea');
+                        textArea.innerHTML = text;
+                        return textArea.value;
+                    };
+
+                    allPosts.forEach(post => {
+                        let postTags = new Set();
+                        
+                        if (post._embedded && post._embedded['wp:term']) {
+                            post._embedded['wp:term'].forEach(termGroup => {
+                                if (Array.isArray(termGroup)) {
+                                    termGroup.forEach(term => {
+                                        // ไม่สน taxonomy แล้ว ดึงทุกคำที่ยาวกว่า 2 ตัวอักษร และไม่อยู่ใน blockList
+                                        if (term && term.name) {
+                                            const tagName = decodeHTMLEntities(term.name.trim());
+                                            const lowerTag = tagName.toLowerCase();
+                                            
+                                            if (tagName.length > 2 && !blockList.includes(lowerTag)) {
+                                                postTags.add(tagName);
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                        
+                        const tagsArray = Array.from(postTags);
+                        tagsArray.forEach(tag => {
+                            topicCounts[tag] = (topicCounts[tag] || 0) + 1;
+                            if (!topicCoOccurrences[tag]) topicCoOccurrences[tag] = {};
+                            
+                            tagsArray.forEach(coTag => {
+                                if (tag !== coTag) {
+                                    topicCoOccurrences[tag][coTag] = (topicCoOccurrences[tag][coTag] || 0) + 1;
+                                }
+                            });
+                        });
+                    });
+                };
+
+                await Promise.all([fetchWPForTerms('posts'), fetchWPForTerms('life')]);
+
+                // กรองประเด็นไม่ให้ซ้ำซ้อนกัน (Topic Clustering Strategy & Semantic Deduplication)
+                let autoRemarks = [];
+                let selectedMainTopics = []; // เก็บหัวข้อหลักที่ถูกเลือกไปแล้ว เพื่อใช้เทียบความซ้ำซ้อน
+                let addedPairs = new Set();
+                const sortedTopics = Object.entries(topicCounts).sort((a, b) => b[1] - a[1]);
+                
+                for (const [topic, count] of sortedTopics) {
+                    if (count >= 2 && autoRemarks.length < 40) { 
+                        
+                        let isDuplicateTheme = false;
+                        // ลบคำนำหน้าที่มักทำให้คำดูต่างกันออกไปก่อนเปรียบเทียบ
+                        const cleanTopic = topic.replace(/^(การ|ความ|ข่าว|พรรค)/, '').trim();
+
+                        for (const selected of selectedMainTopics) {
+                            // 1. เช็กความซ้ำซ้อนแบบการโผล่ร่วมกัน (Co-occurrence)
+                            const overlapCount = (topicCoOccurrences[topic] && topicCoOccurrences[topic][selected]) || 0;
+                            if (overlapCount / count > 0.6) { // โผล่ร่วมกันเกิน 60% ให้มองเป็นเรื่องเดียวกัน
+                                isDuplicateTheme = true;
+                                break;
+                            }
+
+                            // 2. เช็กความซ้ำซ้อนแบบคำซ้อนทับกัน (Substring Matching) เพื่อแก้ปัญหาคำพ้องความหมาย
+                            const cleanSelected = selected.replace(/^(การ|ความ|ข่าว|พรรค)/, '').trim();
+                            // ต้องเป็นคำยาวพอสมควร เพื่อป้องกันคำสั้นๆ ไปแมตช์มั่วซั่ว
+                            if (cleanTopic.length >= 3 && cleanSelected.length >= 3) {
+                                // ถ้าคำใดคำหนึ่งเป็นส่วนหนึ่งของอีกคำ (เช่น "เลือกตั้ง" อยู่ใน "เลือกตั้ง 2569") ให้ยุบรวม!
+                                if (cleanSelected.includes(cleanTopic) || cleanTopic.includes(cleanSelected)) {
+                                    isDuplicateTheme = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        // ถ้าซ้ำข้ามไปหาประเด็นข่าวหมวดอื่นเลย
+                        if (isDuplicateTheme) continue; 
+
+                        selectedMainTopics.push(topic); // บันทึกว่าประเด็นนี้ถูกเลือกแล้ว
+
+                        // ดึงคีย์เวิร์ดรองมาประกอบ 1 คำ
+                        let coTagStr = "";
+                        if (topicCoOccurrences[topic]) {
+                            const sortedCoTags = Object.entries(topicCoOccurrences[topic])
+                                .sort((a, b) => b[1] - a[1]);
+                                
+                            // หาคีย์เวิร์ดรองที่โผล่เยอะสุด โดยไม่เอาคำใน blockList และไม่เอาที่เลือกไปแล้ว
+                            for (const [coTag, coCount] of sortedCoTags) {
+                                let pair1 = `${topic}-${coTag}`;
+                                let pair2 = `${coTag}-${topic}`;
+                                if (!addedPairs.has(pair1) && !addedPairs.has(pair2) && !blockList.includes(coTag.toLowerCase()) && !selectedMainTopics.includes(coTag)) {
+                                    coTagStr = `-${coTag}`;
+                                    addedPairs.add(pair1);
+                                    addedPairs.add(pair2);
+                                    break;
+                                }
+                            }
+                        }
+
+                        let isAlreadySubTag = false;
+                        addedPairs.forEach(p => {
+                            if (p.endsWith(`-${topic}`)) isAlreadySubTag = true;
+                        });
+
+                        if (!isAlreadySubTag) {
+                            autoRemarks.push(`- ${topic}${coTagStr}`);
+                        }
+                    }
+                }
+
+                // ระบบเติมคำให้ครบ 40 อันดับ (Fallback) เผื่อประเด็นที่มีคีย์เวิร์ดรองมันดึงมาได้ไม่ครบโควตา
+                if (autoRemarks.length < 40 && sortedTopics.length > 0) {
+                    for (let i = 0; i < sortedTopics.length; i++) {
+                        if (autoRemarks.length >= 40) break;
+                        const topic = sortedTopics[i][0];
+                        
+                        // เช็กว่าประเด็นนี้ยังไม่ถูกใส่ลงไปในลิสต์ (ไม่ว่าจะเป็นคีย์เวิร์ดหลัก หรือ รอง)
+                        let isAlreadyIncluded = false;
+                        for (let remark of autoRemarks) {
+                            if (remark.startsWith(`- ${topic}`) || remark.includes(`-${topic}`)) {
+                                isAlreadyIncluded = true;
+                                break;
+                            }
+                        }
+                        
+                        if (!isAlreadyIncluded) {
+                            // เช็ก Substring ก๊อกสุดท้าย ก่อนยัดเข้าลิสต์สำรอง
+                            let isDuplicateFallback = false;
+                            const cleanTopicFB = topic.replace(/^(การ|ความ|ข่าว|พรรค)/, '').trim();
+                            for (let remark of autoRemarks) {
+                                const cleanRemark = remark.replace(/^(การ|ความ|ข่าว|พรรค|- )/, '').trim();
+                                if (cleanTopicFB.length >= 3 && cleanRemark.length >= 3) {
+                                    if (cleanRemark.includes(cleanTopicFB) || cleanTopicFB.includes(cleanRemark)) {
+                                        isDuplicateFallback = true;
+                                        break;
+                                    }
+                                }
+                            }
+
+                            if(!isDuplicateFallback) {
+                                autoRemarks.push(`- ${topic}`);
+                            }
+                        }
+                    }
+                }
+
+                // นำลิสต์คีย์เวิร์ดใส่กล่องหมายเหตุ
+                let currentRemark = (appData[currentMonth].remark || "").trim();
+                let finalRemark = currentRemark.split("--- 🤖 ประเด็นข่าวหลักประจำเดือน ---")[0].trim();
+                
+                if (autoRemarks.length > 0) {
+                    if (finalRemark === "") {
+                        finalRemark = "--- 🤖 ประเด็นข่าวหลักประจำเดือน ---\n" + autoRemarks.join("\n");
+                    } else {
+                        finalRemark += "\n\n--- 🤖 ประเด็นข่าวหลักประจำเดือน ---\n" + autoRemarks.join("\n");
+                    }
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'สแกนและยุบรวมคำสำเร็จ!',
+                        text: `ระบบทำการกรองคำซ้ำซ้อน และรวบรวมประเด็นเด่นมาให้ ${autoRemarks.length} รายการค่ะ`,
+                        confirmButtonColor: '#9333ea'
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'info',
+                        title: 'ไม่พบข้อมูล',
+                        text: 'ไม่พบคำจากระบบหลังบ้านที่สามารถนำมาวิเคราะห์ได้เลยค่ะ',
+                        confirmButtonColor: '#4f46e5'
+                    });
+                }
+                
+                appData[currentMonth].remark = finalRemark;
+                document.getElementById('month-remark').value = finalRemark;
+                localStorage.setItem('kpiTeamData2026', JSON.stringify(appData));
+                calculateAll();
+                
+                if (isCloudActive) saveToCloud();
+
+            } catch (error) {
+                console.error("Fetch API Error:", error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'เกิดข้อผิดพลาด',
+                    text: 'ไม่สามารถสแกนข้อมูลจากเว็บไซต์ได้ค่ะ',
+                    confirmButtonColor: '#ef4444'
+                });
+            } finally {
+                if(btn) {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        };
+
+        window.calculateAll = () => {
             const getScore = (pct, t) => {
                 const p = Math.round(pct); // ปัดเศษให้ตรงกับเกณฑ์ตัวเลขเป๊ะๆ
                 if (t === 'g') {
@@ -928,8 +1260,7 @@
                     if (p >= 46) return 4;
                     if (p >= 35) return 3;
                     if (p >= 25) return 2;
-                    if (p >= 15) return 1;
-                    return 0; // < 15%
+                    return 1; // <= 24%
                 } else {
                     // t === 'o'
                     if (p >= 86) return 5;
@@ -972,15 +1303,12 @@
                 }
 
                 const teamSum = t + ot + tt;
-                // คำนวณสัดส่วนเปอร์เซ็นต์ (g = สีเขียว, o = สีส้ม ล้วนๆ ไม่รวมกัน)
                 const gp = t > 0 ? (g/t*100) : 0;
                 const op = t > 0 ? (o/t*100) : 0;
                 
-                // คำนวณสัดส่วนสีแดง (ส่วนที่เหลือ)
                 const r = Math.max(0, t - g - o);
                 const rp = t > 0 ? (r/t*100) : 0;
                 
-                // คำนวณสัดส่วนงานจากยอดรวมเฉพาะจูน+เบิร์ด (ไม่รวมตัง)
                 const mainTeamSum = t + ot;
                 const wp = mainTeamSum > 0 ? (t/mainTeamSum*100) : 0;
 
@@ -1001,17 +1329,14 @@
                 document.getElementById(`${u}-score-o`).innerText = `Score: ${scoreO}/5`;
                 document.getElementById(`${u}-score-w`).innerText = `Score: ${scoreW}/3`;
 
-                // แจ้งเตือน Overload (> 55%)
                 const warningEl = document.getElementById(`${u}-workload-warning`);
                 if (warningEl && wpEl) {
                     if (wp > 55) {
-                        // ใช้ invisible แทน hidden เพื่อให้จองพื้นที่ไว้ บรรทัดจะได้เท่ากัน
                         warningEl.classList.remove('invisible'); 
                         warningEl.classList.remove('hidden'); 
                         wpEl.classList.remove('text-blue-600', 'text-orange-600');
                         wpEl.classList.add('text-red-600'); 
                     } else {
-                        // เปลี่ยนเป็น invisible ให้ความสูงเท่าเดิม
                         warningEl.classList.add('invisible'); 
                         warningEl.classList.remove('hidden'); 
                         wpEl.classList.remove('text-red-600');
@@ -1020,9 +1345,45 @@
                 }
             };
 
-            procUser('june', 'bird'); procUser('bird', 'june');
+            procUser('june', 'bird'); 
+            procUser('bird', 'june');
+            
+            const remarkDisplay = document.getElementById('monthly-remark-display');
+            const txtRemark = document.getElementById('txt-monthly-remark');
+            if (currentMonth !== 'all' && appData[parseInt(currentMonth)].remark) {
+                if(remarkDisplay) remarkDisplay.classList.remove('hidden');
+                if(txtRemark) txtRemark.innerText = appData[parseInt(currentMonth)].remark;
+            } else {
+                if(remarkDisplay) remarkDisplay.classList.add('hidden');
+            }
+            
             updateTable();
+            renderEventLog();
             updateCharts();
+        };
+
+        const renderEventLog = () => {
+            const container = document.getElementById('event-log-content');
+            if (!container) return;
+            container.innerHTML = '';
+            let hasEvents = false;
+
+            appData.forEach((d, i) => {
+                if (d.remark && d.remark.trim() !== '') {
+                    hasEvents = true;
+                    const div = document.createElement('div');
+                    div.className = 'bg-purple-50 rounded-xl p-4 border border-purple-100 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow';
+                    div.innerHTML = `
+                        <div class="font-bold text-purple-800 text-xs bg-purple-200 self-start px-2 py-1 rounded-md"><i class="fas fa-calendar-day mr-1"></i> ${monthNames[i]} 2026</div>
+                        <div class="text-sm text-purple-900 whitespace-pre-wrap">${d.remark}</div>
+                    `;
+                    container.appendChild(div);
+                }
+            });
+
+            if (!hasEvents) {
+                container.innerHTML = '<div class="text-slate-400 text-sm italic text-center w-full py-4 col-span-full">ยังไม่มีการบันทึกเหตุการณ์สำคัญในปีนี้</div>';
+            }
         };
 
         const updateTable = () => {
@@ -1091,6 +1452,7 @@
         };
 
         let vChartIns = null, wChartIns = null, seoJuneChartIns = null, seoBirdChartIns = null;
+
         const updateCharts = () => {
             const ctxV = document.getElementById('volumeChart'), 
                   ctxW = document.getElementById('workloadChart'),
@@ -1134,10 +1496,8 @@
                 const jo = (parseInt(d.june.orange)||0)+(parseInt(d.june.life_orange)||0);
                 const bo = (parseInt(d.bird.orange)||0)+(parseInt(d.bird.life_orange)||0);
 
-                // คำนวณสัดส่วนรายเดือน (Monthly) แยกจูนและเบิร์ด
                 const sum = jt + bt;
                 
-                // ซ่อนกราฟในเดือนที่ยังไม่มีข้อมูล (ไม่ให้ร่วงลงไปที่ 0)
                 if (jt === 0 && bt === 0 && tt === 0) {
                     dataV.datasets[0].data.push(null);
                     dataV.datasets[1].data.push(null);
@@ -1159,11 +1519,9 @@
                     dataW.datasets[1].data.push(sum > 0 ? (jt/sum*100).toFixed(1) : 0);
                     dataW.datasets[2].data.push(sum > 0 ? (bt/sum*100).toFixed(1) : 0);
 
-                    // กราฟ SEO ของจูน
                     dataSeoJune.datasets[2].data.push(jt > 0 ? (jg/jt*100).toFixed(1) : 0);
                     dataSeoJune.datasets[3].data.push(jt > 0 ? (jo/jt*100).toFixed(1) : 0);
 
-                    // กราฟ SEO ของเบิร์ด
                     dataSeoBird.datasets[2].data.push(bt > 0 ? (bg/bt*100).toFixed(1) : 0);
                     dataSeoBird.datasets[3].data.push(bt > 0 ? (bo/bt*100).toFixed(1) : 0);
                 }
@@ -1188,7 +1546,6 @@
                 input.readOnly = true;
                 input.classList.add('locked-input');
                 
-                // When clicking a locked input
                 input.addEventListener('focus', (e) => {
                     if (!isUnlocked) {
                         e.target.blur(); // ซ่อน Keyboard มือถือ
@@ -1239,7 +1596,7 @@
         };
 
         window.exportExcel = () => {
-            const r = [["KPI Team 2026 Master Report"], ["เดือน", "จูน รวม", "จูน เขียว%", "จูน ส้ม%", "เบิร์ด รวม", "เบิร์ด เขียว%", "เบิร์ด ส้ม%", "ตัง รวม", "ตัง เขียว%", "ตัง ส้ม%", "รวมทีม"]];
+            const r = [["KPI Team 2026 Master Report"], ["เดือน", "จูน รวม", "จูน เขียว%", "จูน ส้ม%", "เบิร์ด รวม", "เบิร์ด เขียว%", "เบิร์ด ส้ม%", "ตัง รวม", "ตัง เขียว%", "ตัง ส้ม%", "รวมทีม", "หมายเหตุ"]];
             appData.forEach((d, i) => {
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const jg = (parseInt(d.june.green)||0)+(parseInt(d.june.life_green)||0);
@@ -1250,18 +1607,18 @@
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
                 const tg = (parseInt(d.tang.green)||0)+(parseInt(d.tang.life_green)||0);
                 const to = (parseInt(d.tang.orange)||0)+(parseInt(d.tang.life_orange)||0);
-                r.push([ monthNames[i], jt, (jg/jt*100||0).toFixed(1), (jo/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), (bo/bt*100||0).toFixed(1), tt, (tg/tt*100||0).toFixed(1), (to/tt*100||0).toFixed(1), jt+bt+tt ]);
+                r.push([ monthNames[i], jt, (jg/jt*100||0).toFixed(1), (jo/jt*100||0).toFixed(1), bt, (bg/bt*100||0).toFixed(1), (bo/bt*100||0).toFixed(1), tt, (tg/tt*100||0).toFixed(1), (to/tt*100||0).toFixed(1), jt+bt+tt, d.remark || '' ]);
             });
             XLSX.writeFile(XLSX.utils.book_append_sheet(XLSX.utils.book_new(), XLSX.utils.aoa_to_sheet(r), "KPI"), "KPI_Report_2026.xlsx");
         };
 
         window.exportCSV = () => {
-            let c = "\uFEFFเดือน,จูน,เบิร์ด,ตัง,รวม\n";
+            let c = "\uFEFFเดือน,จูน,เบิร์ด,ตัง,รวม,หมายเหตุ\n";
             appData.forEach((d, i) => {
                 const jt = (parseInt(d.june.total)||0)+(parseInt(d.june.life_total)||0);
                 const bt = (parseInt(d.bird.total)||0)+(parseInt(d.bird.life_total)||0);
                 const tt = (parseInt(d.tang.total)||0)+(parseInt(d.tang.life_total)||0);
-                c += `${monthNames[i]},${jt},${bt},${tt},${jt+bt+tt}\n`;
+                c += `${monthNames[i]},${jt},${bt},${tt},${jt+bt+tt},"${(d.remark || '').replace(/"/g, '""')}"\n`;
             });
             const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([c], { type: 'text/csv;charset=utf-8;' })); link.download = `KPI_2026.csv`; link.click();
         };
